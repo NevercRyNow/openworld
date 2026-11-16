@@ -1,0 +1,33 @@
+workflows:
+  ios-unsigned-ipa:
+    name: OpenWorld unsigned IPA
+    instance_type: mac_mini_m2
+    max_build_duration: 30
+    environment:
+      xcode: latest
+    scripts:
+      - name: Install XcodeGen
+        script: brew install xcodegen
+      - name: Generate Xcode project
+        script: |
+          cd ios
+          xcodegen generate
+      - name: Build unsigned app
+        script: |
+          set -e
+          cd ios
+          xcodebuild \
+            -project OpenWorld.xcodeproj \
+            -scheme OpenWorld \
+            -sdk iphoneos \
+            -configuration Release \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
+          mkdir -p Payload
+          cp -R build/Build/Products/Release-iphoneos/OpenWorld.app Payload/
+          zip -qry OpenWorld-unsigned.ipa Payload
+          shasum -a 256 OpenWorld-unsigned.ipa
+    artifacts:
+      - ios/OpenWorld-unsigned.ipa
