@@ -1,0 +1,69 @@
+name: Build DSH iOS IPA
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "ios-dsh/**"
+      - ".github/workflows/dsh-ios.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: ios-dsh
+        run: xcodegen generate
+
+      - name: Build unsigned app
+        working-directory: ios-dsh
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project DSHPocket.xcodeproj \
+            -scheme DSHPocket \
+            -sdk iphoneos \
+            -configuration Release \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            2>&1 | tee build.log
+
+      - name: Package unsigned IPA
+        working-directory: ios-dsh
+        run: |
+          set -euo pipefail
+          mkdir -p Payload
+          cp -R build/Build/Products/Release-iphoneos/DSH.app Payload/
+          zip -qry DSH-unsigned.ipa Payload
+          shasum -a 256 DSH-unsigned.ipa | tee SHA256.txt
+          ls -lh DSH-unsigned.ipa
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: DSH-unsigned-ipa
+          path: |
+            ios-dsh/DSH-unsigned.ipa
+            ios-dsh/SHA256.txt
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: DSH-build-log
+          path: ios-dsh/build.log
+          if-no-files-found: ignore
