@@ -137,7 +137,7 @@ struct ConnectView: View {
                     .padding(.vertical, 14)
             }
             .buttonStyle(.borderedProminent)
-            .buttonBorderShape(.roundedRectangle(radius: 14))
+            .buttonBorderShape(.roundedRectangle)
             .disabled(address.trimmingCharacters(in: .whitespaces).isEmpty)
 
             Button {
@@ -150,7 +150,7 @@ struct ConnectView: View {
                     .padding(.vertical, 12)
             }
             .buttonStyle(.bordered)
-            .buttonBorderShape(.roundedRectangle(radius: 14))
+            .buttonBorderShape(.roundedRectangle)
 
             Button {
                 address = "http://127.0.0.1:3080"

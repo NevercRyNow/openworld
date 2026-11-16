@@ -5,6 +5,7 @@ struct WebScreen: View {
     let host: Host
 
     @EnvironmentObject private var store: HostStore
+    @Environment(\.scenePhase) private var scenePhase
     @State private var bridge = WebBridge()
     @State private var progress: Double = 0
     @State private var error: String?
@@ -41,7 +42,7 @@ struct WebScreen: View {
                             self.error = nil
                             bridge.reload()
                         },
-                        onChangeHost: { store.disconnect() },
+                        onRepair: repair,
                         onOpenSafari: openInSafari
                     )
                 }
@@ -49,6 +50,13 @@ struct WebScreen: View {
             .navigationTitle(pageTitle.isEmpty ? host.displayName : pageTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar { toolbarContent }
+            .onChange(of: scenePhase) { _, phase in
+                // Coming back from the background: if the last attempt failed,
+                // try once more instead of leaving the user on the error card.
+                if phase == .active, error != nil {
+                    bridge.reload()
+                }
+            }
             .sheet(isPresented: $showSettings) {
                 SettingsView(host: host)
                     .environmentObject(store)
@@ -91,10 +99,10 @@ struct WebScreen: View {
                 }
 
                 Button {
-                    UIPasteboard.general.string = host.webURL.absoluteString
+                    UIPasteboard.general.string = host.originText
                     Haptics.success()
                 } label: {
-                    Label("复制带 token 的地址", systemImage: "doc.on.doc")
+                    Label("复制地址", systemImage: "doc.on.doc")
                 }
 
                 Divider()
@@ -116,6 +124,16 @@ struct WebScreen: View {
         }
     }
 
+    /// The launch token is exchanged for a cookie once; if the cookie is gone
+    /// (cleared data, a restarted host) the stale token cannot log in again, so
+    /// pairing has to start over from the connect screen.
+    private func repair() {
+        let cookies = WKWebsiteDataStore.default()
+        cookies.removeData(ofTypes: Set([WKWebsiteDataTypeCookies]), modifiedSince: .distantPast) {
+            store.disconnect()
+        }
+    }
+
     private func openInSafari() {
         let url = bridge.url ?? host.webURL
         UIApplication.shared.open(url)
@@ -126,7 +144,7 @@ private struct ErrorOverlay: View {
     let message: String
     let host: Host
     let onRetry: () -> Void
-    let onChangeHost: () -> Void
+    let onRepair: () -> Void
     let onOpenSafari: () -> Void
 
     var body: some View {
@@ -159,17 +177,17 @@ private struct ErrorOverlay: View {
                             .padding(.vertical, 11)
                     }
                     .buttonStyle(.borderedProminent)
-                    .buttonBorderShape(.roundedRectangle(radius: 12))
+                    .buttonBorderShape(.roundedRectangle)
 
                     HStack(spacing: 8) {
-                        Button(action: onChangeHost) {
-                            Text("换个地址")
+                        Button(action: onRepair) {
+                            Text("重新配对")
                                 .font(.footnote.weight(.medium))
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 9)
                         }
                         .buttonStyle(.bordered)
-                        .buttonBorderShape(.roundedRectangle(radius: 12))
+                        .buttonBorderShape(.roundedRectangle)
 
                         Button(action: onOpenSafari) {
                             Text("在 Safari 打开")
@@ -178,7 +196,7 @@ private struct ErrorOverlay: View {
                                 .padding(.vertical, 9)
                         }
                         .buttonStyle(.bordered)
-                        .buttonBorderShape(.roundedRectangle(radius: 12))
+                        .buttonBorderShape(.roundedRectangle)
                     }
                 }
             }

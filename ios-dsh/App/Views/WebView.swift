@@ -168,7 +168,7 @@ struct DSHWebView: UIViewRepresentable {
         ) {
             if let http = navigationResponse.response as? HTTPURLResponse, http.statusCode == 401 {
                 DispatchQueue.main.async {
-                    self.parent.error = "宿主拒绝了这次连接：token 可能已经过期，或者地址里的 token 不是这台宿主打印的。"
+                    self.parent.error = "宿主拒绝了这次连接。启动 token 只能换一次登录 cookie：如果这个 token 已经在这台手机上用过，或者宿主重启过，就需要重新配对（重启 `dsh web` 会打印新地址）。"
                     self.parent.progress = 0
                 }
                 decisionHandler(.cancel)
@@ -203,6 +203,18 @@ struct DSHWebView: UIViewRepresentable {
             }
 
             decisionHandler(.allow)
+        }
+
+        func webView(
+            _ webView: WKWebView,
+            createWebViewWith configuration: WKWebViewConfiguration,
+            for navigationAction: WKNavigationAction,
+            windowFeatures: WKWindowFeatures
+        ) -> WKWebView? {
+            if let url = navigationAction.request.url {
+                UIApplication.shared.open(url)
+            }
+            return nil
         }
 
         // MARK: Downloads

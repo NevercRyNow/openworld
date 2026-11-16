@@ -37,6 +37,13 @@ dsh web --host 192.168.1.8
 - 文件选择、下载、`alert/confirm/prompt` 都接到原生；
 - token 存钥匙串，最近宿主存 UserDefaults，最多 8 台。
 
+### token 是「一次性的」
+
+`dsh web` 打印出来的 token 只负责换一枚登录 cookie（`/` 上 303 + `Set-Cookie`）。
+换过之后同一行 token 再用就是 401；宿主重启也会发新 token。
+所以正常使用靠的是 WKWebView 里持久化的 cookie，token 只在第一次配对时需要。
+cookie 丢了（清了数据、换了宿主进程）就点错误页上的「重新配对」，回电脑上拿新地址。
+
 ## 构建
 
 工程用 [XcodeGen](https://github.com/yonaskolb/XcodeGen) 生成，`App/` 下是全部源码，没有第三方依赖。
@@ -79,6 +86,7 @@ ios-dsh/
 - 官方 Web UI 是桌面优先的布局，iPhone 竖屏信息密度偏高；下一步在壳里加窄屏适配（折叠侧栏 / 单栏对话）。
 - 无签名 IPA 需要自己签名；没有 App Store / TestFlight 通道。
 - 后台不保活：切走后连接会断，回来重新连（Web UI 会自己重连）。
+- 官方 Web UI 没有按宽度做的响应式断点（只有 `hover/pointer` 查询），iPhone 竖屏是桌面三栏压缩后的样子。
 
 ## 路线
 
