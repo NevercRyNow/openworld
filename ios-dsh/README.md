@@ -55,6 +55,12 @@ xcodegen generate
 open DSHPocket.xcodeproj     # 选自己的 Team 即可真机调试
 ```
 
+### 本机一键出包
+
+```sh
+./build-ipa.sh      # 产出 DSH-unsigned.ipa + SHA256.txt
+```
+
 ### 无签名 IPA（CI）
 
 本机没有 Xcode 也能出包：`/.github/workflows/dsh-ios.yml` 在 `macos-15` 上跑，
@@ -62,6 +68,8 @@ open DSHPocket.xcodeproj     # 选自己的 Team 即可真机调试
 连同 `SHA256.txt` 一起作为 artifact 上传。
 
 侧载（AltStore / Sideloadly / TrollStore）后即可安装；免费 Apple ID 签名 7 天有效。
+macOS runner 当前拿不到机器时（job 排队 15 分钟被取消），换 Codemagic 或任意一台 Mac，
+详见 [`docs/install.md`](docs/install.md)。
 
 ## 目录
 

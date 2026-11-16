@@ -1,0 +1,6 @@
+build/
+Payload/
+*.ipa
+build.log
+SHA256.txt
+DSHPocket.xcodeproj/
