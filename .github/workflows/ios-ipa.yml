@@ -1,0 +1,69 @@
+name: Build OpenWorld iOS IPA
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "ios/**"
+      - ".github/workflows/ios-ipa.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        working-directory: ios
+        run: xcodegen generate
+
+      - name: Build unsigned app
+        working-directory: ios
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project OpenWorld.xcodeproj \
+            -scheme OpenWorld \
+            -sdk iphoneos \
+            -configuration Release \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            2>&1 | tee build.log
+
+      - name: Package unsigned IPA
+        working-directory: ios
+        run: |
+          set -euo pipefail
+          mkdir -p Payload
+          cp -R build/Build/Products/Release-iphoneos/OpenWorld.app Payload/
+          zip -qry OpenWorld-unsigned.ipa Payload
+          shasum -a 256 OpenWorld-unsigned.ipa | tee SHA256.txt
+          ls -lh OpenWorld-unsigned.ipa
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenWorld-unsigned-ipa
+          path: |
+            ios/OpenWorld-unsigned.ipa
+            ios/SHA256.txt
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload build log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: OpenWorld-build-log
+          path: ios/build.log
+          if-no-files-found: ignore
