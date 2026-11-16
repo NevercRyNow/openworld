@@ -2,7 +2,7 @@ name: OpenWorld
 options:
   bundleIdPrefix: com.nevercrynow
   deploymentTarget:
-    iOS: "18.0"
+    iOS: "17.0"
   createIntermediateGroups: true
 settings:
   base:
