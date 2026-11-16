@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>OpenWorld — 全球开源，一页尽览。</title>
+<meta name="description" content="OpenWorld 是一个面向模拟器、游戏移植与技术生态的开源生态图鉴。搜索、筛选、收藏，把全球开源项目放进一个入口。">
+<meta name="theme-color" content="#05060B">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="assets/img/app-icon.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/icon-192.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="stylesheet" href="styles.css">
+<meta property="og:type" content="website">
+<meta property="og:title" content="OpenWorld — 全球开源，一页尽览。">
+<meta property="og:description" content="The open-source ecosystem, daily. Discover emulators, game ports, research and verifiable downloads in one living atlas.">
+<meta property="og:image" content="assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="OpenWorld — 全球开源，一页尽览。">
+<meta name="twitter:description" content="The open-source ecosystem, daily.">
+<meta name="twitter:image" content="assets/img/og.jpg">
+<script>document.documentElement.classList.add("js");setTimeout(function(){if(!window.__owReady)document.documentElement.classList.add("no-reveal");},3200);</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "OpenWorld",
+  "alternateName": "iOSHub",
+  "description": "An open-source living atlas for emulators, game ports, technical research and verifiable downloads.",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "iOS 18+, iPadOS",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "author": { "@type": "Person", "name": "郑壹鸣", "alternateName": "NEVERCRYNOW" }
+}
+</script>
+</head>
+<body>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="glow" id="glow" aria-hidden="true"></div>
+
+<svg class="svg-sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-mark" viewBox="0 0 64 64">
+    <g fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round">
+      <circle cx="32" cy="32" r="20.5"/>
+      <ellipse cx="32" cy="32" rx="20.5" ry="7.4" transform="rotate(-18 32 32)"/>
+      <ellipse cx="32" cy="32" rx="20.5" ry="13.8" transform="rotate(62 32 32)"/>
+    </g>
+    <circle cx="32" cy="32" r="2.3" fill="currentColor"/>
+  </symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.4"/><path d="m15.5 15.5 5 5"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8.5 6.2 18 12l-9.5 5.8Z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v15M6 13l6 6 6-6"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 20V5M6 11l6-6 6 6"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="m5 5 14 14M19 5 5 19"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m4 12.5 5 5L20 6.5"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.2 6.5"/><path d="M20 4v7h-7"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24"><path d="M12 2.2a9.8 9.8 0 0 0-3.1 19.1c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.2-1.5-1.2-1.5-.9-.6.1-.6.1-.6 1 .1 1.6 1.1 1.6 1.1.9 1.6 2.4 1.1 3 .9.1-.7.4-1.1.7-1.4-2.2-.3-4.6-1.1-4.6-5a4 4 0 0 1 1.1-2.7c-.1-.3-.5-1.3.1-2.7 0 0 .8-.3 2.8 1a9.5 9.5 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .6 1.4.2 2.4.1 2.7a4 4 0 0 1 1.1 2.7c0 3.9-2.3 4.7-4.6 5 .4.3.7 1 .7 2v3c0 .3.2.6.7.5A9.8 9.8 0 0 0 12 2.2Z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 20h14"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></symbol>
+  <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 3 2.6 5.5 6 .8-4.4 4.2 1.1 6L12 16.6 6.7 19.5l1.1-6L3.4 9.3l6-.8Z"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13.5a4 4 0 0 0 5.7 0l2.8-2.8a4 4 0 1 0-5.7-5.7L11.5 6.3"/><path d="M14 10.5a4 4 0 0 0-5.7 0l-2.8 2.8a4 4 0 1 0 5.7 5.7l1.3-1.3"/></symbol>
+</svg>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="brand" href="#top" aria-label="OpenWorld 首页">
+      <svg class="brand-mark" viewBox="0 0 64 64" aria-hidden="true"><use href="#i-mark"/></svg>
+      <span class="brand-word">OpenWorld</span>
+      <span class="brand-tag">OPEN SOURCE LIVING ATLAS</span>
+      <span class="build-pill">3.2.1</span>
+    </a>
+    <nav class="nav-links" aria-label="主导航">
+      <a href="#discover">Discover</a>
+      <a href="#atlas">Atlas</a>
+      <a href="#research">Research</a>
+      <a href="#downloads">Downloads</a>
+      <a href="#library">Library</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="nav-film" type="button" data-film>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg>
+        <span>影片</span>
+      </button>
+      <a class="nav-get" href="#get">获取 <span class="nav-get-arrow">↘</span></a>
+      <button class="nav-menu" id="menuBtn" type="button" aria-label="打开菜单" aria-expanded="false" aria-controls="mobileMenu"><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  <div class="mobile-top"><span class="mono">OPENWORLD / 2026</span><button type="button" id="menuClose" aria-label="关闭菜单">×</button></div>
+  <nav aria-label="移动端导航">
+    <a href="#discover"><span>Discover</span><em>发现</em></a>
+    <a href="#atlas"><span>Atlas</span><em>模拟与移植</em></a>
+    <a href="#research"><span>Research</span><em>技术图谱</em></a>
+    <a href="#downloads"><span>Downloads</span><em>可验证获取</em></a>
+    <a href="#library"><span>Library</span><em>你的收藏</em></a>
+  </nav>
+  <div class="mobile-foot"><button type="button" data-film>观看 60 秒影片</button><a href="https://github.com/NevercRyNow/openworld" target="_blank" rel="noreferrer">GitHub ↗</a></div>
+</div>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <div class="hero-ghost" aria-hidden="true">OPENWORLD</div>
+    <div class="hero-orbit orbit-a" aria-hidden="true"></div>
+    <div class="hero-orbit orbit-b" aria-hidden="true"></div>
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <div class="eyebrow reveal"><span class="pulse"></span><span class="mono">OPEN SOURCE LIVING ATLAS · 2026</span></div>
+        <h1 class="reveal" data-delay="1">全球开源，<br><span class="mint">一页尽览。</span></h1>
+        <p class="hero-lede reveal" data-delay="2">OpenWorld 是一个面向模拟器、游戏移植与技术生态的开源生态图鉴。搜索、筛选、收藏，把全球项目放进一个入口。</p>
+        <p class="hero-rebrand reveal" data-delay="3"><span class="rebrand-old">iOSHub 3.2.1</span><span class="rebrand-arrow">→</span><span class="rebrand-new">OpenWorld</span><em>一次品牌、架构与体验的重构</em></p>
+        <div class="hero-actions reveal" data-delay="4">
+          <a class="btn btn-mint" href="#get"><span>获取 OpenWorld</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-down"/></svg></a>
+          <button class="btn btn-glass" type="button" data-film><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg><span>观看 60 秒影片</span></button>
+        </div>
+        <div class="hero-meta reveal" data-delay="5"><span><i></i>iOS 18+</span><span><i></i>iPhone &amp; iPad</span><span><i></i>3.2.1</span><span><i></i>3.9 MB</span><span><i></i>SHA-256 可校验</span></div>
+      </div>
+
+      <div class="hero-device reveal" data-delay="2">
+        <div class="device-glow" aria-hidden="true"></div>
+        <div class="device" id="device">
+          <div class="device-chrome" aria-hidden="true"><span></span><span></span><span></span><em>OPENWORLD / LIVE ATLAS</em></div>
+          <div class="app" id="app">
+            <div class="app-bar">
+              <div class="app-brand"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-mark"/></svg><span>OpenWorld</span></div>
+              <div class="app-tabs" role="tablist" aria-label="OpenWorld 应用预览">
+                <button type="button" class="app-tab active" role="tab" aria-selected="true" data-app-tab="discover">Discover</button>
+                <button type="button" class="app-tab" role="tab" aria-selected="false" data-app-tab="emulators" tabindex="-1">Emulators</button>
+                <button type="button" class="app-tab" role="tab" aria-selected="false" data-app-tab="ports" tabindex="-1">Game Ports</button>
+                <button type="button" class="app-tab" role="tab" aria-selected="false" data-app-tab="research" tabindex="-1">Research</button>
+                <button type="button" class="app-tab" role="tab" aria-selected="false" data-app-tab="downloads" tabindex="-1">Downloads</button>
+              </div>
+              <button class="app-search-icon" type="button" aria-label="搜索" tabindex="-1"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg></button>
+            </div>
+
+            <div class="app-screens">
+              <section class="app-screen active" data-app-screen="discover" role="tabpanel" aria-label="Discover">
+                <div class="app-discover">
+                  <div class="app-main">
+                    <p class="app-kicker">01 / DISCOVER</p>
+                    <h3 class="app-title">全球开源，<br><span>一页尽览。</span></h3>
+                    <div class="app-search"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg><span>Provenance</span><kbd>⌘K</kbd></div>
+                    <div class="app-chips"><span class="on">Emulation</span><span>Game Porting</span><span>Virtualization</span><span>Graphics</span><span>AI</span></div>
+                    <div class="app-art" aria-hidden="true"><div class="app-art-grid"></div><div class="app-art-planet"></div><span>OPEN SOURCE / ATLAS 01</span></div>
+                    <p class="app-quote">开源，不该只是列表。<em>The open-source ecosystem, daily.</em></p>
+                  </div>
+                  <div class="app-side">
+                    <div class="app-side-head"><strong>Trending Projects</strong><em>THIS WEEK / GLOBAL</em></div>
+                    <div class="app-project-list">
+                      <button class="app-project" type="button" data-project-open="provenance"><span class="app-letter teal">P</span><span class="app-project-copy"><strong>Provenance</strong><em>CONSOLE EMULATION</em></span><span class="app-version">v3.2.0</span><svg class="app-chev" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chev"/></svg></button>
+                      <button class="app-project" type="button" data-project-open="retroarch"><span class="app-letter violet">R</span><span class="app-project-copy"><strong>RetroArch</strong><em>EMULATION FRONTEND</em></span><span class="app-version">v1.21.0</span><svg class="app-chev" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chev"/></svg></button>
+                      <button class="app-project" type="button" data-project-open="fex"><span class="app-letter orange">F</span><span class="app-project-copy"><strong>FEX-Emu</strong><em>X86 ON ARM</em></span><span class="app-version">v2508</span><svg class="app-chev" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chev"/></svg></button>
+                      <button class="app-project" type="button" data-project-open="utm"><span class="app-letter blue">U</span><span class="app-project-copy"><strong>UTM</strong><em>VIRTUALIZATION</em></span><span class="app-version">v4.6.2</span><svg class="app-chev" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-chev"/></svg></button>
+                    </div>
+                    <div class="app-collections">
+                      <div class="app-side-head"><strong>Editorial Collections</strong><em>CURATED</em></div>
+                      <div class="app-collection"><span class="app-col-icon">E</span><div><strong>The Modern Emulation Ecosystem</strong><em>12 个项目</em></div></div>
+                      <div class="app-collection"><span class="app-col-icon port">P</span><div><strong>The Art of Game Porting</strong><em>8 个项目</em></div></div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="app-screen" data-app-screen="emulators" role="tabpanel" aria-label="Emulators" hidden>
+                <div class="app-page">
+                  <header class="app-page-head"><p class="app-kicker">02 / EMULATORS</p><h3>模拟器生态</h3><p>按平台、核心与兼容性组织，而不是一张清单。</p></header>
+                  <div class="app-chips"><span class="on">All</span><span>Console</span><span>Handheld</span><span>PC</span><span>Arcade</span></div>
+                  <div class="app-emu-grid">
+                    <article class="app-emu"><span class="app-letter violet">R</span><div><strong>RetroArch</strong><em>FRONTEND</em></div><span class="app-pct">92%</span><div class="app-bar-track"><i style="--p:92%"></i></div></article>
+                    <article class="app-emu"><span class="app-letter teal">P</span><div><strong>Provenance</strong><em>CONSOLE</em></div><span class="app-pct">88%</span><div class="app-bar-track"><i style="--p:88%"></i></div></article>
+                    <article class="app-emu"><span class="app-letter blue">P</span><div><strong>PPSSPP</strong><em>PSP</em></div><span class="app-pct">96%</span><div class="app-bar-track"><i style="--p:96%"></i></div></article>
+                    <article class="app-emu"><span class="app-letter orange">U</span><div><strong>UTM</strong><em>QEMU</em></div><span class="app-pct">74%</span><div class="app-bar-track"><i style="--p:74%"></i></div></article>
+                  </div>
+                  <div class="app-footnote"><span>6 PROJECTS · 4 PLATFORMS</span><span>COMPATIBILITY MATRIX</span></div>
+                </div>
+              </section>
+
+              <section class="app-screen" data-app-screen="ports" role="tabpanel" aria-label="Game Ports" hidden>
+                <div class="app-page">
+                  <header class="app-page-head"><p class="app-kicker">03 / GAME PORTS</p><h3>Game Ports</h3><p>区分开源引擎、移植代码与商业游戏数据。</p></header>
+                  <div class="app-port-grid">
+                    <article class="app-port orange"><span class="app-port-type">RUNTIME</span><strong>CyPort</strong><em>Nintendo Switch</em><span class="app-port-tag">ORIGINAL FILES</span></article>
+                    <article class="app-port blue"><span class="app-port-type">ENGINE</span><strong>Shipwright</strong><em>Source port</em><span class="app-port-tag">METAL</span></article>
+                    <article class="app-port gold"><span class="app-port-type">SOURCE</span><strong>HarkinianPad</strong><em>Zelda: OoT</em><span class="app-port-tag">ORIGINAL FILES</span></article>
+                  </div>
+                  <p class="app-legal">需要自备原始游戏文件 · 不提供商业游戏资源</p>
+                </div>
+              </section>
+
+              <section class="app-screen" data-app-screen="research" role="tabpanel" aria-label="Research" hidden>
+                <div class="app-page">
+                  <header class="app-page-head"><p class="app-kicker">04 / RESEARCH</p><h3>技术，不是孤岛。</h3><p>项目、依赖与技术，在同一张图上被看见。</p></header>
+                  <div class="app-research">
+                    <svg class="app-graph" viewBox="0 0 400 220" aria-hidden="true">
+                      <path d="M54 128 C 104 128, 94 66, 156 66 S 222 102, 250 102" class="glow-line"/>
+                      <path d="M54 128 C 100 128, 104 166, 156 166 S 222 136, 250 136"/>
+                      <path d="M250 102 C 298 102, 300 66, 344 66"/>
+                      <path d="M250 136 C 300 136, 302 174, 344 174"/>
+                      <circle cx="54" cy="128" r="3"/><circle cx="156" cy="66" r="3"/><circle cx="156" cy="166" r="3"/><circle cx="250" cy="102" r="3"/><circle cx="250" cy="136" r="3"/><circle cx="344" cy="66" r="3"/><circle cx="344" cy="174" r="3"/>
+                    </svg>
+                    <div class="app-node n1">Kernel</div><div class="app-node n2">Emulation</div><div class="app-node n3">Graphics</div><div class="app-node n4">Virtualization</div><div class="app-node n5">Runtime</div><div class="app-node n6">Media</div>
+                    <div class="app-node-card"><span>SELECTED NODE</span><strong>Virtualization</strong><em>在 Apple 设备上运行其他系统</em><dl><div><dt>PROJECTS</dt><dd>UTM · QEMU</dd></div><div><dt>PLATFORM</dt><dd>iOS / macOS</dd></div><div><dt>STATUS</dt><dd class="mint">Active</dd></div></dl></div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="app-screen" data-app-screen="downloads" role="tabpanel" aria-label="Downloads" hidden>
+                <div class="app-page">
+                  <header class="app-page-head"><p class="app-kicker">05 / DOWNLOADS</p><h3>可验证的获取。</h3><p>进度、速度、来源与 SHA-256，一条任务看清全部状态。</p></header>
+                  <div class="app-downloads">
+                    <div class="app-dl"><div><strong>iOSHub 3.2.1</strong><em>iPhone &amp; iPad · 3.9 MB</em></div><span class="app-dl-pct">68%</span><div class="app-bar-track"><i style="--p:68%"></i></div><span class="app-dl-state">12.4 MB/s</span></div>
+                    <div class="app-dl"><div><strong>Desktop Runtime</strong><em>macOS · 126 MB</em></div><span class="app-dl-pct">34%</span><div class="app-bar-track"><i style="--p:34%"></i></div><span class="app-dl-state">已暂停</span></div>
+                    <div class="app-dl done"><div><strong>Shader Cache</strong><em>All platforms · 38 MB</em></div><span class="app-dl-pct">100%</span><div class="app-bar-track"><i style="--p:100%"></i></div><span class="app-dl-state">✓ SHA-256</span></div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+        <div class="device-float float-a"><span class="mono">LIVE</span><strong>5 个入口</strong><em>一个世界</em></div>
+        <div class="device-float float-b"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg><span><strong>SHA-256</strong><em>来源可验证</em></span></div>
+      </div>
+    </div>
+    <div class="hero-bottom">
+      <a class="scroll-cue" href="#story"><span class="scroll-ring"><i></i></span><span class="mono">SCROLL TO EXPLORE</span></a>
+      <div class="hero-ticker"><div class="ticker"><span>DISCOVER</span><b>✦</b><span>EMULATORS</span><b>✦</b><span>GAME PORTS</span><b>✦</b><span>RESEARCH</span><b>✦</b><span>DOWNLOADS</span><b>✦</b><span>OPEN SOURCE</span><b>✦</b><span>DISCOVER</span><b>✦</b><span>EMULATORS</span><b>✦</b><span>GAME PORTS</span><b>✦</b><span>RESEARCH</span><b>✦</b><span>DOWNLOADS</span><b>✦</b><span>OPEN SOURCE</span><b>✦</b></div></div>
+      <span class="mono hero-version">v3.2.1 / 2026</span>
+    </div>
+  </section>
+
+  <!-- MANIFESTO -->
+  <section class="section light manifesto" id="story">
+    <div class="section-inner">
+      <div class="section-label"><span class="mono">01 / MANIFESTO</span><i></i></div>
+      <div class="manifesto-grid">
+        <div class="manifesto-title reveal">
+          <p class="mono kicker">THE OPEN-SOURCE ECOSYSTEM, DAILY.</p>
+          <h2>开源，<br>不该只是列表。</h2>
+          <p class="manifesto-cn">每天都有新的模拟器、移植、图形层与运行时出现。OpenWorld 把它们从链接堆里捞出来，整理成可探索、可比较、可验证的图谱。</p>
+        </div>
+        <div class="manifesto-side reveal" data-delay="1">
+          <div class="wordmark-morph" aria-label="iOSHub 3.2.1 改名为 OpenWorld">
+            <span class="old">iOSHub 3.2.1</span><span class="arrow">→</span><span class="new">OpenWorld</span>
+            <em>2026 · REBRAND · RESTRUCTURE</em>
+          </div>
+          <div class="pillar-list">
+            <div><span class="mono">01 / DISCOVER</span><h3>不是更多链接，<br>而是更好的入口。</h3><p>搜索、筛选、收藏。一个入口，连接项目、开发者与技术标签。</p></div>
+            <div><span class="mono">02 / ORGANIZE</span><h3>按平台与兼容性，<br>而不是按热度。</h3><p>模拟器、移植与运行时，各自拥有清晰的结构与边界。</p></div>
+            <div><span class="mono">03 / VERIFY</span><h3>来源、版本与哈希，<br>一条都不省。</h3><p>每一次获取都能追溯，每一个项目都保留原始出处。</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="manifesto-foot"><span>5 个入口</span><span>1 个 Library</span><span>0 个账号</span><span class="quote">“名字变了，探索的方式，也变了。”</span></div>
+    </div>
+  </section>
+
+  <!-- DISCOVER -->
+  <section class="section light discover" id="discover">
+    <div class="section-inner">
+      <div class="section-label"><span class="mono">02 / DISCOVER</span><i></i></div>
+      <div class="section-head">
+        <h2 class="reveal">全球开源，<br><span class="mint-text">一页尽览。</span></h2>
+        <div class="section-head-side reveal" data-delay="1"><p>搜索、筛选、收藏。把全球开源项目，放进一个入口。</p><span class="mono">SEARCH / FILTER / SAVE</span></div>
+      </div>
+      <div class="explorer reveal" data-delay="1">
+        <div class="explorer-toolbar">
+          <label class="big-search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg>
+            <input id="projectSearch" type="search" placeholder="搜索项目、开发者、技术标签" autocomplete="off" aria-label="搜索项目、开发者、技术标签">
+            <kbd>⌘ K</kbd>
+          </label>
+          <div class="filter-chips" role="group" aria-label="项目分类">
+            <button type="button" class="chip active" data-filter="all">All</button>
+            <button type="button" class="chip" data-filter="emulation">Emulation</button>
+            <button type="button" class="chip" data-filter="virtualization">Virtualization</button>
+            <button type="button" class="chip" data-filter="graphics">Graphics</button>
+            <button type="button" class="chip" data-filter="translation">Translation</button>
+          </div>
+          <span class="mono result-count" id="resultCount">06 PROJECTS</span>
+        </div>
+        <div class="project-grid" id="projectGrid">
+          <button class="project-card" type="button" data-project="provenance" data-filter="emulation" data-search="provenance console emulator ios tvos swift metal community">
+            <span class="project-icon teal">P</span><span class="project-card-top"><strong>Provenance</strong><em>CONSOLE EMULATION</em></span><span class="project-version">v3.2.0</span>
+            <span class="project-desc">多平台开源模拟器前端 · iOS / tvOS</span>
+            <span class="project-waves"><svg viewBox="0 0 120 24"><path d="M1 16c12-9 20 7 32-1s20 4 32-3 20 4 25 0"/></svg></span>
+            <span class="project-stars">6.8k</span>
+          </button>
+          <button class="project-card" type="button" data-project="retroarch" data-filter="emulation" data-search="retroarch frontend libretro emulation multi platform">
+            <span class="project-icon violet">R</span><span class="project-card-top"><strong>RetroArch</strong><em>EMULATION FRONTEND</em></span><span class="project-version">v1.21.0</span>
+            <span class="project-desc">统一接口，连接多个模拟核心与平台。</span>
+            <span class="project-waves"><svg viewBox="0 0 120 24"><path d="M1 18c12-8 20 4 32-2s20 5 32-4 20 5 25 1"/></svg></span>
+            <span class="project-stars">9.4k</span>
+          </button>
+          <button class="project-card" type="button" data-project="fex" data-filter="translation" data-search="fex emu x86 arm translation runtime linux">
+            <span class="project-icon orange">F</span><span class="project-card-top"><strong>FEX-Emu</strong><em>X86 ON ARM</em></span><span class="project-version">v2508</span>
+            <span class="project-desc">在 ARM 上运行 x86 / x86_64 应用与游戏。</span>
+            <span class="project-waves"><svg viewBox="0 0 120 24"><path d="M1 14c12 8 20-6 32 1s20-5 32 4 20-4 25 1"/></svg></span>
+            <span class="project-stars">7.1k</span>
+          </button>
+          <button class="project-card" type="button" data-project="utm" data-filter="virtualization" data-search="utm qemu virtualization ios macos windows linux">
+            <span class="project-icon blue">U</span><span class="project-card-top"><strong>UTM</strong><em>VIRTUALIZATION</em></span><span class="project-version">v4.6.2</span>
+            <span class="project-desc">在 Apple 设备上运行其他系统。</span>
+            <span class="project-waves"><svg viewBox="0 0 120 24"><path d="M1 17c12-6 20 5 32-4s20 6 32-1 20 4 25-2"/></svg></span>
+            <span class="project-stars">12.8k</span>
+          </button>
+          <button class="project-card" type="button" data-project="box64" data-filter="translation" data-search="box64 x86_64 translation arm linux games">
+            <span class="project-icon pink">B</span><span class="project-card-top"><strong>Box64</strong><em>X86_64 TRANSLATION</em></span><span class="project-version">v0.3.6</span>
+            <span class="project-desc">让 x86_64 Linux 程序在 ARM 设备上运行。</span>
+            <span class="project-waves"><svg viewBox="0 0 120 24"><path d="M1 15c12-4 20 8 32-1s20-2 32 3 20-5 25-2"/></svg></span>
+            <span class="project-stars">5.9k</span>
+          </button>
+          <button class="project-card" type="button" data-project="dxmt" data-filter="graphics" data-search="dxmt direct3d metal graphics translation apple">
+            <span class="project-icon gold">D</span><span class="project-card-top"><strong>DXMT</strong><em>D3D → METAL</em></span><span class="project-version">v0.80</span>
+            <span class="project-desc">把 Direct3D 带到 Metal，让游戏在 Apple 设备上运行。</span>
+            <span class="project-waves"><svg viewBox="0 0 120 24"><path d="M1 18c12-9 20 6 32-3s20 2 32-2 20 5 25-1"/></svg></span>
+            <span class="project-stars">4.7k</span>
+          </button>
+        </div>
+        <div class="explorer-foot"><span class="mono">EDITOR'S SELECTION · RECENTLY UPDATED · CONTINUE EXPLORING</span><span>项目数据来自 GitHub 与社区；每个项目都保留原始来源。</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ATLAS -->
+  <section class="section dark atlas" id="atlas">
+    <div class="section-inner">
+      <div class="section-label"><span class="mono">03 / ATLAS</span><i></i></div>
+      <div class="section-head">
+        <h2 class="reveal">模拟器，<br><span class="outline">不是一张清单。</span></h2>
+        <div class="section-head-side reveal" data-delay="1"><p>模拟器、游戏移植与运行时，按平台、核心与兼容性组织。每一个项目都有清晰的位置。</p><span class="mono">EMULATOR SPOTLIGHT / NATIVE IOS PORTS / COMPATIBILITY LAYER</span></div>
+      </div>
+      <div class="atlas-tabs reveal" role="tablist" aria-label="Atlas 分类">
+        <button type="button" class="atlas-tab active" role="tab" aria-selected="true" data-atlas="emulators"><span>Emulators</span><em>模拟器生态</em></button>
+        <button type="button" class="atlas-tab" role="tab" aria-selected="false" data-atlas="ports" tabindex="-1"><span>Game Ports</span><em>游戏移植数据库</em></button>
+        <span class="atlas-count mono" id="atlasCount">6 PROJECTS</span>
+      </div>
+      <div class="atlas-panel active" data-atlas-panel="emulators">
+        <div class="atlas-filters" role="group" aria-label="平台筛选">
+          <button type="button" class="chip chip-dark active" data-platform="all">All</button>
+          <button type="button" class="chip chip-dark" data-platform="console">Console</button>
+          <button type="button" class="chip chip-dark" data-platform="handheld">Handheld</button>
+          <button type="button" class="chip chip-dark" data-platform="pc">PC</button>
+          <button type="button" class="chip chip-dark" data-platform="arcade">Arcade</button>
+        </div>
+        <div class="emu-grid" id="emuGrid">
+          <article class="emu-card glass" data-platform="console"><div class="emu-top"><span class="project-icon violet">R</span><div><h3>RetroArch</h3><span class="mono">FRONTEND · MULTI</span></div><span class="emu-score">92%</span></div><p>统一界面，连接多个模拟核心。覆盖主机、掌机与街机。</p><div class="compat"><i style="--p:92%"></i></div><footer><span class="mono">CORES / 40+</span><span class="mono">ACTIVE</span></footer></article>
+          <article class="emu-card glass" data-platform="console"><div class="emu-top"><span class="project-icon teal">P</span><div><h3>Provenance</h3><span class="mono">CONSOLE · IOS / TVOS</span></div><span class="emu-score">88%</span></div><p>面向大屏与手柄优化，统一资料库、封面、存档与控制器配置。</p><div class="compat"><i style="--p:88%"></i></div><footer><span class="mono">PLATFORM / 4</span><span class="mono">ACTIVE</span></footer></article>
+          <article class="emu-card glass" data-platform="handheld"><div class="emu-top"><span class="project-icon blue">P</span><div><h3>PPSSPP</h3><span class="mono">HANDHELD · PSP</span></div><span class="emu-score">96%</span></div><p>轻量、快速，专注 PSP 游戏与高分辨率渲染。</p><div class="compat"><i style="--p:96%"></i></div><footer><span class="mono">CORES / 1</span><span class="mono">ACTIVE</span></footer></article>
+          <article class="emu-card glass" data-platform="pc"><div class="emu-top"><span class="project-icon orange">U</span><div><h3>UTM</h3><span class="mono">VIRTUALIZATION · QEMU</span></div><span class="emu-score">74%</span></div><p>在 Apple 设备上运行其他系统。QEMU 后端，支持多种架构。</p><div class="compat"><i style="--p:74%"></i></div><footer><span class="mono">PLATFORM / 3</span><span class="mono">ACTIVE</span></footer></article>
+          <article class="emu-card glass" data-platform="console"><div class="emu-top"><span class="project-icon pink">D</span><div><h3>DolphiniOS</h3><span class="mono">CONSOLE · GC / WII</span></div><span class="emu-score">81%</span></div><p>GameCube 与 Wii 的开源模拟器，针对 Apple 芯片优化。</p><div class="compat"><i style="--p:81%"></i></div><footer><span class="mono">CORES / 2</span><span class="mono">ACTIVE</span></footer></article>
+          <article class="emu-card glass" data-platform="handheld"><div class="emu-top"><span class="project-icon gold">M</span><div><h3>melonDS</h3><span class="mono">HANDHELD · NDS</span></div><span class="emu-score">90%</span></div><p>专注 Nintendo DS 的高精度模拟，支持本地联机。</p><div class="compat"><i style="--p:90%"></i></div><footer><span class="mono">CORES / 1</span><span class="mono">ACTIVE</span></footer></article>
+        </div>
+        <p class="atlas-note">兼容性来自社区维护 · 具体以项目页为准</p>
+      </div>
+      <div class="atlas-panel" data-atlas-panel="ports" hidden>
+        <div class="port-grid">
+          <article class="port-card orange"><div class="port-art"><span>C</span><i></i></div><span class="port-type mono">RUNTIME</span><h3>CyPort</h3><p>Nintendo Switch</p><div class="port-tags"><span>ORIGINAL FILES</span><span>METAL</span></div></article>
+          <article class="port-card blue"><div class="port-art"><span>S</span><i></i></div><span class="port-type mono">ENGINE</span><h3>Shipwright</h3><p>Source port</p><div class="port-tags"><span>ENGINE</span><span>IOS</span></div></article>
+          <article class="port-card gold"><div class="port-art"><span>H</span><i></i></div><span class="port-type mono">SOURCE</span><h3>HarkinianPad</h3><p>Zelda: OoT</p><div class="port-tags"><span>ORIGINAL FILES</span><span>METAL</span></div></article>
+          <article class="port-card pink"><div class="port-art"><span>M</span><i></i></div><span class="port-type mono">DECOMP</span><h3>SM64 iOS</h3><p>Super Mario 64</p><div class="port-tags"><span>DECOMP</span><span>TOUCH</span></div></article>
+        </div>
+        <div class="ports-foot"><p>需要自备原始游戏文件 · 不提供商业游戏资源</p><span class="mono">PORTING GUIDE · INSTALL NOTES · TROUBLESHOOTING</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESEARCH -->
+  <section class="section dark research" id="research">
+    <div class="section-inner">
+      <div class="section-label"><span class="mono">04 / RESEARCH</span><i></i></div>
+      <div class="section-head">
+        <h2 class="reveal">技术，<br><span class="mint-text">不是孤岛。</span></h2>
+        <div class="section-head-side reveal" data-delay="1"><p>项目、依赖与技术，在同一张图上被看见。选中一个节点，沿着连线继续探索。</p><span class="mono">PROJECTS / DEPENDENCIES / TECHNOLOGIES</span></div>
+      </div>
+      <div class="research-stage reveal" data-delay="1">
+        <div class="graph-wrap" id="graphWrap">
+          <div class="graph-grid" aria-hidden="true"></div>
+          <div class="graph-legend mono"><span class="pulse"></span> LIVE GRAPH / 08 NODES</div>
+          <svg class="graph-lines" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true" id="graphLines"></svg>
+          <button type="button" class="graph-node" data-node="kernel" style="--x:16%;--y:27%"><span class="node-dot blue"></span><span>Kernel</span><em>low-level</em></button>
+          <button type="button" class="graph-node" data-node="emulation" style="--x:42%;--y:17%"><span class="node-dot violet"></span><span>Emulation</span><em>cores</em></button>
+          <button type="button" class="graph-node" data-node="graphics" style="--x:47%;--y:66%"><span class="node-dot teal"></span><span>Graphics</span><em>metal</em></button>
+          <button type="button" class="graph-node active" data-node="virtualization" style="--x:73%;--y:44%"><span class="node-dot orange"></span><span>Virtualization</span><em>utm</em></button>
+          <button type="button" class="graph-node" data-node="compatibility" style="--x:23%;--y:69%"><span class="node-dot blue"></span><span>Compatibility</span><em>matrix</em></button>
+          <button type="button" class="graph-node" data-node="runtime" style="--x:83%;--y:20%"><span class="node-dot teal"></span><span>Runtime</span><em>translation</em></button>
+          <button type="button" class="graph-node" data-node="media" style="--x:75%;--y:79%"><span class="node-dot gold"></span><span>Media</span><em>evidence</em></button>
+          <button type="button" class="graph-node" data-node="ai" style="--x:17%;--y:84%"><span class="node-dot pink"></span><span>AI</span><em>assist</em></button>
+        </div>
+        <aside class="graph-detail" id="graphDetail" aria-live="polite">
+          <div class="graph-detail-top"><span class="mono" id="graphCat">SELECTED NODE</span><span class="mono" id="graphIndex">04 / 08</span></div>
+          <h3 id="graphTitle">Virtualization</h3>
+          <p id="graphDesc">虚拟化 · 在 Apple 设备上运行其他系统。</p>
+          <dl class="graph-metrics">
+            <div><dt class="mono">PROJECTS</dt><dd id="graphProjects">UTM · QEMU</dd></div>
+            <div><dt class="mono">PLATFORM</dt><dd id="graphPlatform">iOS / macOS</dd></div>
+            <div><dt class="mono">STATUS</dt><dd id="graphStatus" class="mint-text">Active</dd></div>
+          </dl>
+          <div class="graph-related"><span class="mono">RELATED</span><div id="graphRelated"><button type="button" data-jump="runtime">Runtime</button><button type="button" data-jump="graphics">Graphics</button></div></div>
+          <button class="graph-view" type="button" id="graphView">VIEW PROJECT <span>→</span></button>
+        </aside>
+      </div>
+      <div class="research-foot"><span class="mono">GRAPH / LIVE</span><span>项目、依赖与技术由社区数据与项目来源共同维护。</span></div>
+    </div>
+  </section>
+
+  <!-- DOWNLOADS -->
+  <section class="section light downloads" id="downloads">
+    <div class="section-inner">
+      <div class="section-label"><span class="mono">05 / DOWNLOADS</span><i></i></div>
+      <div class="section-head">
+        <h2 class="reveal">可验证<br><span class="mint-text">的获取。</span></h2>
+        <div class="section-head-side reveal" data-delay="1"><p>进度、速度、来源与 SHA-256，一条任务看清全部状态。不经过中间服务器，下载完成即校验。</p><span class="mono">PROGRESS / SPEED / SOURCE / SHA-256</span></div>
+      </div>
+      <div class="download-manager reveal" data-delay="1">
+        <div class="dm-head"><div><span class="mono">DOWNLOAD MANAGER</span><strong>4 个任务 · 1 个已完成</strong></div><div class="dm-storage"><span class="mono">STORAGE</span><div class="dm-storage-bar"><i style="--p:42%"></i></div><em>4.2 GB / 64 GB</em></div></div>
+        <div class="dl-list" id="dlList">
+          <div class="dl-row" data-dl="app">
+            <span class="dl-icon blue"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg></span>
+            <div class="dl-info"><strong>iOSHub 3.2.1</strong><em>iPhone &amp; iPad · 3.9 MB</em></div>
+            <div class="dl-progress"><div class="dl-bar"><i style="width:68%"></i></div><div class="dl-meta"><span class="dl-pct">68%</span><span class="dl-speed">12.4 MB/s</span></div></div>
+            <button type="button" class="dl-action" data-dl-action="app"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pause"/></svg><span>暂停</span></button>
+          </div>
+          <div class="dl-row" data-dl="runtime">
+            <span class="dl-icon violet"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg></span>
+            <div class="dl-info"><strong>Desktop Runtime</strong><em>macOS · 126 MB</em></div>
+            <div class="dl-progress"><div class="dl-bar"><i style="width:34%"></i></div><div class="dl-meta"><span class="dl-pct">34%</span><span class="dl-speed">已暂停</span></div></div>
+            <button type="button" class="dl-action" data-dl-action="runtime"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg><span>继续</span></button>
+          </div>
+          <div class="dl-row done" data-dl="shader">
+            <span class="dl-icon mint"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg></span>
+            <div class="dl-info"><strong>Shader Cache</strong><em>All platforms · 38 MB</em></div>
+            <div class="dl-progress"><div class="dl-bar"><i style="width:100%"></i></div><div class="dl-meta"><span class="dl-pct">100%</span><span class="dl-speed">SHA-256 verified</span></div></div>
+            <button type="button" class="dl-action verified" data-dl-action="shader"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg><span>已校验</span></button>
+          </div>
+          <div class="dl-row failed" data-dl="media">
+            <span class="dl-icon orange"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg></span>
+            <div class="dl-info"><strong>Media Pack</strong><em>Optional · 210 MB</em></div>
+            <div class="dl-progress"><div class="dl-bar"><i style="width:12%"></i></div><div class="dl-meta"><span class="dl-pct">12%</span><span class="dl-speed">校验失败 · 重试</span></div></div>
+            <button type="button" class="dl-action failed" data-dl-action="media"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg><span>重试</span></button>
+          </div>
+        </div>
+        <div class="dl-settings">
+          <div class="dl-setting"><div><span class="mono">NETWORK</span><strong>仅 Wi-Fi 下载</strong></div><button type="button" class="mini-switch" role="switch" aria-checked="true" data-dl-setting="wifi" aria-label="仅 Wi-Fi 下载"><span></span></button></div>
+          <div class="dl-setting"><div><span class="mono">CONCURRENCY</span><strong>并发任务</strong></div><div class="dl-seg" role="group" aria-label="并发任务数"><button type="button">1</button><button type="button" class="active">2</button><button type="button">3</button></div></div>
+          <div class="dl-setting"><div><span class="mono">INTEGRITY</span><strong>下载后自动校验 SHA-256</strong></div><button type="button" class="mini-switch" role="switch" aria-checked="true" data-dl-setting="hash" aria-label="自动校验 SHA-256"><span></span></button></div>
+        </div>
+        <div class="dm-foot"><span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg> SHA-256 · 本地校验 · 不经过中间服务器</span><span class="mono">交互演示 / 不产生真实下载</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEDIA -->
+  <section class="section dark media" id="media">
+    <div class="section-inner">
+      <div class="section-label"><span class="mono">06 / MEDIA INTELLIGENCE</span><i></i></div>
+      <div class="section-head">
+        <h2 class="reveal">让项目，<br><span class="mint-text">被真正看见。</span></h2>
+        <div class="section-head-side reveal" data-delay="1"><p>自动发现真实截图、演示与视频，来源可追溯。你看到的，是它真正运行的样子。</p><span class="mono">SCREENSHOTS / DEMOS / VIDEOS</span></div>
+      </div>
+      <div class="media-grid reveal" data-delay="1">
+        <button type="button" class="media-card media-large" data-media="discover">
+          <div class="media-bg" role="img" aria-label="OpenWorld Discover 界面" style="background-image:url('assets/img/discover-v3.jpg')"></div>
+          <span class="media-badge">OFFICIAL</span><span class="media-caption"><strong>App Screenshot</strong><em>OpenWorld · Discover</em></span><span class="media-source mono">GITHUB · README</span>
+        </button>
+        <button type="button" class="media-card media-small" data-media="trending">
+          <div class="media-bg" role="img" aria-label="OpenWorld Library 界面" style="background-image:url('assets/img/library-v3.jpg')"></div>
+          <span class="media-badge">OFFICIAL</span><span class="media-caption"><strong>Library</strong><em>Watchlist &amp; Compare</em></span><span class="media-source mono">PRODUCT FILM</span>
+        </button>
+        <button type="button" class="media-card media-small" data-media="video">
+          <div class="media-bg" role="img" aria-label="OpenWorld 产品影片" style="background-image:url('assets/img/film-poster.jpg')"></div>
+          <span class="media-play"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-play"/></svg></span>
+          <span class="media-badge orange">VIDEO</span><span class="media-caption"><strong>Feature Showcase</strong><em>60 seconds / 2026</em></span><span class="media-source mono">YOUTUBE / FILM</span>
+        </button>
+        <button type="button" class="media-card media-wide" data-media="glass">
+          <div class="media-bg" role="img" aria-label="OpenWorld Downloads 界面" style="background-image:url('assets/img/downloads-v3.jpg')"></div>
+          <span class="media-badge teal">OFFICIAL</span><span class="media-caption"><strong>Downloads</strong><em>Verifiable acquisition</em></span><span class="media-source mono">PRODUCT FILM</span>
+        </button>
+        <article class="media-card media-text">
+          <div class="media-text-art"><span>DEV</span><i></i></div>
+          <span class="media-badge violet">DEVELOPER</span><span class="media-caption"><strong>Devlog</strong><em>Build notes &amp; releases</em></span><span class="media-source mono">MASTODON</span>
+        </article>
+        <article class="media-card media-text">
+          <div class="media-text-art technical"><span>DOC</span><i></i></div>
+          <span class="media-badge teal">TECHNICAL</span><span class="media-caption"><strong>Architecture</strong><em>Technical profile</em></span><span class="media-source mono">DOCS</span>
+        </article>
+      </div>
+      <div class="pipeline reveal">
+        <div class="pipeline-line"><i></i></div>
+        <div class="pipeline-src"><span class="mono">GITHUB</span><span class="mono">OFFICIAL</span><span class="mono">YOUTUBE</span><span class="mono">REDDIT</span><span class="mono">MASTODON</span></div>
+        <p>真实素材，按来源归档。 <em>Real media. Traced back.</em></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIBRARY -->
+  <section class="section light library" id="library">
+    <div class="section-inner">
+      <div class="section-label"><span class="mono">07 / LIBRARY</span><i></i></div>
+      <div class="section-head">
+        <h2 class="reveal">你的<br><span class="mint-text">Library。</span></h2>
+        <div class="section-head-side reveal" data-delay="1"><p>收藏、专题、浏览历史与项目对比，全部保存在本地。不需要账号，不上传你的选择。</p><span class="mono">LOCAL-FIRST / NO ACCOUNT</span></div>
+      </div>
+      <div class="library-grid reveal" data-delay="1">
+        <div class="library-side">
+          <div class="fav-block"><span class="mono">WATCHLIST / FAVORITES</span><div class="fav-list">
+            <button type="button" data-project-open="provenance"><span class="project-icon teal">P</span><span><strong>Provenance</strong><em>CONSOLE EMULATION</em></span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button>
+            <button type="button" data-project-open="retroarch"><span class="project-icon violet">R</span><span><strong>RetroArch</strong><em>FRONTEND</em></span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button>
+            <button type="button" data-project-open="utm"><span class="project-icon blue">U</span><span><strong>UTM</strong><em>VIRTUALIZATION</em></span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg></button>
+          </div></div>
+          <div class="collections-block"><span class="mono">COLLECTIONS</span>
+            <div class="collection-card"><span class="collection-glyph">E</span><div><strong>Best Emulators</strong><em>12 个项目 · 本地专题</em></div><span>→</span></div>
+            <div class="collection-card"><span class="collection-glyph violet">P</span><div><strong>Game Ports</strong><em>8 个项目 · 本地专题</em></div><span>→</span></div>
+          </div>
+        </div>
+        <div class="compare">
+          <div class="compare-head"><div><span class="mono">COMPARE</span><h3>把项目放在一起看。</h3></div><span class="mono">UP TO 3 PROJECTS</span></div>
+          <div class="compare-picks" role="group" aria-label="选择对比项目">
+            <button type="button" class="compare-chip active" data-compare="provenance">Provenance</button>
+            <button type="button" class="compare-chip active" data-compare="retroarch">RetroArch</button>
+            <button type="button" class="compare-chip active" data-compare="utm">UTM</button>
+            <button type="button" class="compare-chip" data-compare="fex">FEX-Emu</button>
+            <button type="button" class="compare-chip" data-compare="box64">Box64</button>
+          </div>
+          <div class="compare-table-wrap"><table class="compare-table" id="compareTable"><thead></thead><tbody></tbody></table></div>
+          <p class="compare-note">对比数据来自项目公开资料 · 仅保存在本地 · 左右滑动</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GLOBAL SEARCH -->
+  <section class="section light global-search-section" id="search">
+    <div class="section-inner">
+      <div class="section-label"><span class="mono">08 / GLOBAL SEARCH</span><i></i></div>
+      <div class="global-head">
+        <h2 class="reveal">一次搜索，<br><span class="mint-text">整个生态。</span></h2>
+        <p class="reveal" data-delay="1">项目、平台、许可证、状态、技术与开放程度，同一个查询里一起找。不必先知道它藏在哪个分类。</p>
+      </div>
+      <div class="global-search-panel reveal" data-delay="1">
+        <label class="global-search-bar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-search"/></svg>
+          <input id="globalQuery" type="search" value="metal" placeholder="搜索项目、技术、平台或许可证" autocomplete="off" aria-label="全局搜索">
+          <button type="button" id="globalSubmit" aria-label="执行搜索">↵</button>
+        </label>
+        <div class="global-filters" role="group" aria-label="全局筛选">
+          <button type="button" class="chip active" data-global-filter="all">All</button>
+          <button type="button" class="chip" data-global-filter="graphics">Graphics</button>
+          <button type="button" class="chip" data-global-filter="translation">Translation</button>
+          <button type="button" class="chip" data-global-filter="runtime">Runtime</button>
+          <button type="button" class="chip" data-global-filter="framework">Framework</button>
+          <button type="button" class="chip" data-global-filter="open">Open Source</button>
+        </div>
+        <div class="global-results" id="globalResults">
+          <button type="button" class="global-row" data-project-open="dxmt" data-kind="graphics,translation" data-open="true" data-search="dxmt direct3d metal translation graphics apple">
+            <span class="project-icon gold">D</span><span class="global-row-main"><strong>DXMT</strong><em>Direct3D → Metal translation</em></span><span class="global-row-tags"><i>Graphics</i><i>Metal</i></span><span class="global-open">OPEN →</span>
+          </button>
+          <a class="global-row" href="https://github.com/KhronosGroup/MoltenVK" target="_blank" rel="noreferrer" data-kind="graphics,framework" data-open="true" data-search="moltenvk vulkan metal graphics framework khronos">
+            <span class="project-icon violet">M</span><span class="global-row-main"><strong>MoltenVK</strong><em>Vulkan on Metal</em></span><span class="global-row-tags"><i>Graphics</i><i>Khronos</i></span><span class="global-open">OPEN →</span>
+          </a>
+          <button type="button" class="global-row" data-project-open="fex" data-kind="translation,runtime" data-open="true" data-search="fex x86 arm translation runtime linux metal">
+            <span class="project-icon orange">F</span><span class="global-row-main"><strong>FEX-Emu</strong><em>x86 on ARM runtime</em></span><span class="global-row-tags"><i>Translation</i><i>Runtime</i></span><span class="global-open">OPEN →</span>
+          </button>
+          <a class="global-row" href="https://developer.apple.com/documentation/metal/metal-fx" target="_blank" rel="noreferrer" data-kind="graphics,framework" data-open="false" data-search="metalfx upscaling metal framework apple graphics">
+            <span class="project-icon teal">M</span><span class="global-row-main"><strong>MetalFX Upscaling</strong><em>Apple upscaling framework</em></span><span class="global-row-tags"><i>Graphics</i><i>Apple</i></span><span class="global-open">DOCS →</span>
+          </a>
+        </div>
+        <div class="global-foot"><span class="mono" id="globalCount">04 RESULTS</span><span class="mono">SORT / RELEVANCE</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORLD -->
+  <section class="section dark world" id="world">
+    <div class="section-inner">
+      <div class="section-label"><span class="mono">09 / ONE WORLD</span><i></i></div>
+      <div class="world-head">
+        <h2 class="reveal">五个入口，<br><span class="outline">一个世界。</span></h2>
+        <p class="reveal" data-delay="1">发现、模拟器、移植、研究、下载——统一在一个品牌之下。从一个入口进入，沿着连线走到整个生态。</p>
+      </div>
+      <div class="world-stage reveal" data-delay="1">
+        <div class="world-rings" aria-hidden="true"><i></i><i></i><i></i></div>
+        <div class="world-core"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-mark"/></svg><strong>OpenWorld</strong><em>ONE ATLAS</em></div>
+        <button type="button" class="world-node wn-1" data-go="#discover"><span>01</span><strong>Discover</strong><em>发现</em></button>
+        <button type="button" class="world-node wn-2" data-go="#atlas"><span>02</span><strong>Emulators</strong><em>模拟</em></button>
+        <button type="button" class="world-node wn-3" data-go="#atlas"><span>03</span><strong>Game Ports</strong><em>移植</em></button>
+        <button type="button" class="world-node wn-4" data-go="#research"><span>04</span><strong>Research</strong><em>研究</em></button>
+        <button type="button" class="world-node wn-5" data-go="#downloads"><span>05</span><strong>Downloads</strong><em>下载</em></button>
+      </div>
+      <div class="world-dock reveal" data-delay="2" aria-label="原生 Dock">
+        <button type="button" data-go="#discover"><span class="wd-ico">◎</span><span><strong>Discover</strong><em>发现</em></span></button>
+        <button type="button" data-go="#atlas"><span class="wd-ico">▦</span><span><strong>Emulators</strong><em>模拟</em></span></button>
+        <button type="button" data-go="#atlas"><span class="wd-ico">▣</span><span><strong>Game Ports</strong><em>移植</em></span></button>
+        <button type="button" data-go="#research"><span class="wd-ico">⌁</span><span><strong>Research</strong><em>研究</em></span></button>
+        <button type="button" data-go="#downloads"><span class="wd-ico">↓</span><span><strong>Downloads</strong><em>下载</em></span></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- GET -->
+  <section class="get" id="get">
+    <div class="get-inner">
+      <div class="get-card reveal">
+        <div class="get-mark"><img src="assets/img/app-icon.png" alt="iOSHub App 图标"></div>
+        <div class="get-copy">
+          <span class="mono">IOSHUB 3.2.1 / OPENWORLD PREVIEW</span>
+          <h2>进入<br><span class="mint-text">开放世界。</span></h2>
+          <p>iOSHub 3.2.1 · 3.9 MB · iOS 18+<br>未签名 IPA · 需要 SideStore / AltStore / Sideloadly 安装。</p>
+        </div>
+        <div class="get-actions">
+          <a class="btn btn-mint" href="assets/downloads/iOSHub-3.2.1-unsigned.ipa" download><span>下载 iOSHub 3.2.1</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg></a>
+          <a class="btn btn-glass" href="https://github.com/NevercRyNow/openworld" target="_blank" rel="noreferrer"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-github"/></svg><span>查看源码</span></a>
+          <span class="get-hash mono">SHA-256 · 675247DC…46AC2C32B <button type="button" id="copySha" aria-label="复制 SHA-256">复制</button></span>
+        </div>
+      </div>
+      <div class="get-credits"><span>BY NEVERCRYNOW</span><span>制作 · 郑壹鸣</span><span>iOSHub 3.2.1 → OpenWorld</span><button type="button" data-film>观看影片 ↗</button></div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand"><div class="footer-logo"><svg viewBox="0 0 64 64" aria-hidden="true"><use href="#i-mark"/></svg><span>OpenWorld</span></div><p>An open-source living atlas.<br>全球开源，一页尽览。</p><span class="mono">BY NEVERCRYNOW / 2026</span></div>
+    <div class="footer-cols">
+      <div><h3 class="mono">EXPLORE</h3><a href="#discover">Discover</a><a href="#atlas">Atlas</a><a href="#research">Research</a><a href="#downloads">Downloads</a><a href="#library">Library</a><a href="#search">Search</a></div>
+      <div><h3 class="mono">PROJECT</h3><a href="https://github.com/NevercRyNow/openworld" target="_blank" rel="noreferrer">GitHub ↗</a><a href="https://github.com/NevercRyNow/openworld/releases" target="_blank" rel="noreferrer">Releases ↗</a><button type="button" data-film>Product Film ↗</button></div>
+      <div><h3 class="mono">CREDITS</h3><span>创意 / 概念 · 郑壹鸣</span><span>视觉 / 设计 · 郑壹鸣</span><span>开发 / 工程 · 郑壹鸣</span><span>动画 / 配乐 · 郑壹鸣</span></div>
+    </div>
+  </div>
+  <div class="footer-bottom"><span class="mono">© 2026 NEVERCRYNOW</span><span class="mono">iOS 18+ · IPHONE &amp; IPAD</span><a class="mono" href="#top">回到顶部 ↑</a></div>
+</footer>
+
+<dialog class="film-dialog" id="filmDialog" aria-label="OpenWorld 产品影片">
+  <div class="film-shell">
+    <div class="film-head"><div><span class="mono">OPENWORLD / PRODUCT FILM</span><strong>60 秒，进入开放世界。</strong></div><button type="button" class="film-close" id="filmClose" aria-label="关闭影片"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <video id="filmVideo" controls playsinline preload="none" poster="assets/img/film-poster.jpg"><source src="assets/film.mp4" type="video/mp4">你的浏览器不支持视频。</video>
+    <div class="film-foot"><span class="mono">A FILM BY 郑壹鸣 / NEVERCRYNOW</span><span class="mono">WEB CUT · 60S · 2026</span></div>
+  </div>
+</dialog>
+
+<dialog class="project-dialog" id="projectDialog" aria-label="项目详情">
+  <div class="pd-shell">
+    <div class="pd-head"><span class="mono" id="pdKicker">PROJECT / DETAIL</span><button type="button" class="pd-close" id="pdClose" aria-label="关闭项目详情"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+    <div class="pd-hero"><span class="project-icon teal" id="pdIcon">P</span><div class="pd-title"><h2 id="pdName">Provenance</h2><p id="pdDesc">多平台开源模拟器前端 · iOS / tvOS</p><a id="pdUrl" href="#" target="_blank" rel="noreferrer" class="mono">GITHUB ↗</a></div><button type="button" class="pd-fav" id="pdFav" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-star"/></svg><span>收藏项目</span></button></div>
+    <div class="pd-stats" id="pdStats"></div>
+    <div class="pd-tabs" role="tablist" aria-label="项目详情分类"><button type="button" class="pd-tab active" role="tab" aria-selected="true" data-pd-tab="overview">Overview</button><button type="button" class="pd-tab" role="tab" aria-selected="false" data-pd-tab="compat" tabindex="-1">Compatibility</button><button type="button" class="pd-tab" role="tab" aria-selected="false" data-pd-tab="resources" tabindex="-1">Resources</button><button type="button" class="pd-tab" role="tab" aria-selected="false" data-pd-tab="changelog" tabindex="-1">Changelog</button></div>
+    <div class="pd-body" id="pdBody"></div>
+    <div class="pd-foot"><div><strong id="pdFootName">Provenance · Release 3.2.0</strong><span class="mono" id="pdFootMeta">iOS 18+ · 42 MB · SHA-256 可校验</span></div><a class="btn btn-mint" id="pdGet" href="#" target="_blank" rel="noreferrer">获取 <span>→</span></a></div>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="app.js" defer></script>
+</body>
+</html>
