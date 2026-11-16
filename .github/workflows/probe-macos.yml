@@ -1,0 +1,8 @@
+name: macOS runner probe
+on:
+  workflow_dispatch:
+jobs:
+  probe:
+    runs-on: macos-latest
+    steps:
+      - run: sw_vers && xcodebuild -version
