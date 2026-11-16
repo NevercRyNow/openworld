@@ -23,11 +23,11 @@ targets:
       - path: App
         excludes:
           - "Info.plist"
-    info:
-      path: App/Info.plist
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.nevercrynow.dsh
+        INFOPLIST_FILE: App/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
         PRODUCT_NAME: DSH
         MARKETING_VERSION: "0.1.0"
         CURRENT_PROJECT_VERSION: "1"
