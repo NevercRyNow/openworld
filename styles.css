@@ -1236,3 +1236,10 @@ body { background: transparent; }
 }
 .build-pill { font-family: var(--mono); font-size: 6px; letter-spacing: .06em; color: var(--mint); border: 1px solid rgba(105,203,176,.25); border-radius: 999px; padding: 3px 5px; }
 @media (max-width: 900px) { .build-pill { display: none; } }
+
+/* site attention counter */
+.hero-attention { display: flex; align-items: center; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
+.hero-attention .mono { font-size: 9px; letter-spacing: .18em; color: var(--dim-2); }
+.attention-badge { height: 20px; width: auto; border-radius: 4px; display: block; }
+.attention-note { color: var(--dim-2); }
+@media (max-width: 640px) { .hero-attention { gap: 8px; } .attention-note { display: none; } }
