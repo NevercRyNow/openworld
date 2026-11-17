@@ -1,104 +1,171 @@
 import SwiftUI
-import WebKit
+import UIKit
 
 struct SettingsView: View {
-    let host: Host
-
     @EnvironmentObject private var store: HostStore
-    @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject private var demo: DemoStore
 
-    @State private var name: String
-    @State private var confirmingForget = false
-
-    init(host: Host) {
-        self.host = host
-        _name = State(initialValue: host.displayName)
-    }
+    @State private var showWeb = false
 
     var body: some View {
         NavigationStack {
-            Form {
-                Section("这台宿主") {
-                    LabeledContent("地址", value: host.originText)
-                    LabeledContent("Token", value: "••••••••")
-                    TextField("名称", text: $name)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
+            ScrollView {
+                VStack(spacing: 16) {
+                    hostCard
+                    dataCard
+                    webCard
+                    aboutCard
                 }
+                .padding(.horizontal, 20)
+                .padding(.top, 8)
+                .padding(.bottom, 40)
+            }
+            .scrollIndicators(.hidden)
+            .background(Theme.ink.ignoresSafeArea())
+            .navigationTitle("设置")
+            .navigationBarTitleDisplayMode(.large)
+        }
+        .sheet(isPresented: $showWeb) {
+            if let host = store.current {
+                WebScreen(host: host)
+                    .preferredColorScheme(.dark)
+            }
+        }
+    }
 
-                Section("网页") {
-                    Button {
+    private var hostCard: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 8) {
+                if store.current != nil {
+                    StatusDot()
+                    Text("已连接")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(.white)
+                } else {
+                    Circle().fill(Color.white.opacity(0.3)).frame(width: 7, height: 7)
+                    Text("未连接")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(Theme.muted)
+                }
+                Spacer()
+                Text(store.current?.displayName ?? "—")
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(Theme.muted)
+                    .lineLimit(1)
+            }
+
+            if let host = store.current {
+                Text(host.originText)
+                    .font(.system(size: 12, design: .monospaced))
+                    .foregroundStyle(Theme.dim)
+                    .lineLimit(1)
+
+                HStack(spacing: 10) {
+                    Button("重新配对") {
+                        Haptics.soft()
+                        store.disconnect()
+                    }
+                    .buttonStyle(NcnsGlassButtonStyle(compact: true))
+
+                    Button("在 Safari 打开") {
                         if let url = URL(string: host.originText) {
                             UIApplication.shared.open(url)
                         }
-                    } label: {
-                        Label("在 Safari 打开", systemImage: "safari")
                     }
-
-                    Button {
-                        clearCache()
-                    } label: {
-                        Label("清除网页缓存", systemImage: "trash")
-                    }
+                    .buttonStyle(NcnsGlassButtonStyle(compact: true))
                 }
-
-                Section {
-                    Button(role: .destructive) {
-                        store.disconnect()
-                        dismiss()
-                    } label: {
-                        Label("断开连接", systemImage: "rectangle.portrait.and.arrow.right")
-                    }
-
-                    Button(role: .destructive) {
-                        confirmingForget = true
-                    } label: {
-                        Label("移除这台宿主", systemImage: "minus.circle")
-                    }
-                } footer: {
-                    Text("移除后这台宿主的 token 会从钥匙串删除，下次需要重新扫码。")
+            } else {
+                Button("连接宿主") {
+                    store.disconnect()
                 }
-
-                Section {
-                    LabeledContent("版本", value: Bundle.main.appVersion)
-                } footer: {
-                    Text("DSH 0.1 · 原生壳加载 `dsh web`，会话、工具和审批都由宿主执行。")
-                }
-            }
-            .navigationTitle("设置")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("完成") {
-                        save()
-                        dismiss()
-                    }
-                }
-            }
-            .confirmationDialog("移除 \(host.displayName)？", isPresented: $confirmingForget, titleVisibility: .visible) {
-                Button("移除", role: .destructive) {
-                    store.forget(host)
-                    dismiss()
-                }
-                Button("取消", role: .cancel) {}
-            } message: {
-                Text("只删除这台设备上保存的连接信息，宿主的会话和文件都不受影响。")
+                .buttonStyle(NcnsGlassButtonStyle(compact: true))
             }
         }
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .ncnsGlass(cornerRadius: 22)
     }
 
-    private func save() {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        if !trimmed.isEmpty, trimmed != host.name {
-            store.rename(host, to: trimmed)
+    private var dataCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Label("数据源", systemImage: "cylinder.split.1x2")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(.white)
+                Spacer()
+                Text("演示数据")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(Theme.mint)
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 4)
+                    .background(Theme.mint.opacity(0.14), in: Capsule())
+            }
+
+            Text("界面和交互已经按最终形态跑通，数据还是本地的 demo。接上 `dsh-plugin-mobile-gateway` 的 WebSocket 之后，这里会显示连接状态与事件吞吐。")
+                .font(.system(size: 12))
+                .foregroundStyle(Theme.muted)
+                .fixedSize(horizontal: false, vertical: true)
         }
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Theme.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
     }
 
-    private func clearCache() {
-        let store = WKWebsiteDataStore.default()
-        store.removeData(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(), modifiedSince: .distantPast) {
-            Haptics.success()
+    private var webCard: some View {
+        Button {
+            Haptics.tap()
+            showWeb = true
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "globe")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(Theme.accent)
+                    .frame(width: 34, height: 34)
+                    .background(Theme.accent.opacity(0.14), in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("网页版")
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundStyle(.white)
+                    Text("插件页、终端、文件预览这些还没原生的功能")
+                        .font(.system(size: 11))
+                        .foregroundStyle(Theme.muted)
+                }
+
+                Spacer(minLength: 8)
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 11, weight: .bold))
+                    .foregroundStyle(Theme.dim)
+            }
+            .padding(16)
+            .contentShape(Rectangle())
         }
+        .buttonStyle(.plain)
+        .background(Theme.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .disabled(store.current == nil)
+        .opacity(store.current == nil ? 0.5 : 1)
+    }
+
+    private var aboutCard: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Text("NcnsDSH")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(.white)
+                Spacer()
+                Text(Bundle.main.appVersion)
+                    .font(.system(size: 12, design: .monospaced))
+                    .foregroundStyle(Theme.dim)
+            }
+            Text("视觉参照 tv 与 Apple Music；玻璃只出现在 chrome 和可交互卡片上，内容区保持不透明，保证对比度。")
+                .font(.system(size: 12))
+                .foregroundStyle(Theme.muted)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Theme.card, in: RoundedRectangle(cornerRadius: 22, style: .continuous))
     }
 }
 

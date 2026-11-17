@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ConnectView: View {
     @EnvironmentObject private var store: HostStore
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @State private var address = ""
     @State private var token = ""
@@ -15,7 +16,9 @@ struct ConnectView: View {
     }
 
     var body: some View {
-        NavigationStack {
+        ZStack {
+            backdrop
+
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
                     header
@@ -24,120 +27,170 @@ struct ConnectView: View {
                     recents
                     footer
                 }
-                .padding(.horizontal, 20)
-                .padding(.top, 28)
-                .padding(.bottom, 40)
+                .padding(.horizontal, 22)
+                .padding(.top, 40)
+                .padding(.bottom, 48)
             }
             .scrollDismissesKeyboard(.interactively)
-            .background(Theme.paper.ignoresSafeArea())
-            .toolbar(.hidden, for: .navigationBar)
-            .sheet(isPresented: $scanning) {
-                ScannerView(
-                    onCode: { code in
-                        scanning = false
-                        apply(code)
-                    },
-                    onCancel: { scanning = false }
+        }
+        .background(Theme.ink.ignoresSafeArea())
+        .sheet(isPresented: $scanning) {
+            ScannerView(
+                onCode: { code in
+                    scanning = false
+                    apply(code)
+                },
+                onCancel: { scanning = false }
+            )
+            .ignoresSafeArea()
+        }
+    }
+
+    // MARK: - Backdrop
+
+    private var backdrop: some View {
+        ZStack {
+            Theme.ink
+
+            if reduceMotion {
+                RadialGradient(
+                    colors: [Theme.accent.opacity(0.34), Color.clear],
+                    center: .top,
+                    startRadius: 0,
+                    endRadius: 420
                 )
-                .ignoresSafeArea()
+            } else {
+                TimelineView(.animation) { context in
+                    let time = context.date.timeIntervalSinceReferenceDate
+                    let x = 0.5 + 0.12 * sin(time / 9)
+                    let y = 0.24 + 0.06 * cos(time / 11)
+
+                    ZStack {
+                        RadialGradient(
+                            colors: [Theme.accent.opacity(0.40), Color.clear],
+                            center: UnitPoint(x: x, y: y),
+                            startRadius: 0,
+                            endRadius: 430
+                        )
+                        RadialGradient(
+                            colors: [Theme.mint.opacity(0.20), Color.clear],
+                            center: UnitPoint(x: 1 - x, y: 0.82),
+                            startRadius: 0,
+                            endRadius: 380
+                        )
+                    }
+                }
             }
         }
+        .ignoresSafeArea()
     }
 
     // MARK: - Sections
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 14) {
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .fill(Theme.markGradient)
-                .frame(width: 64, height: 64)
+                .frame(width: 68, height: 68)
                 .overlay(
                     Text(">_")
-                        .font(.system(size: 26, weight: .heavy, design: .monospaced))
+                        .font(.system(size: 27, weight: .heavy, design: .monospaced))
                         .foregroundStyle(.white)
                 )
-                .shadow(color: Theme.accent.opacity(0.35), radius: 18, y: 8)
+                .shadow(color: Theme.accent.opacity(0.45), radius: 22, y: 10)
 
-            Text("DSH")
+            Text("NcnsDSH")
                 .font(.system(size: 40, weight: .bold, design: .rounded))
-                .foregroundStyle(.primary)
+                .foregroundStyle(.white)
 
-            Text("DeepSeek Harness，在你的手机上继续。\n连上正在运行的那台电脑，会话、工具和审批都在。")
-                .font(.subheadline)
+            Text("把手机接到那台正在跑 `dsh web` 的电脑。\n会话、工具和审批都在它那里执行。")
+                .font(.system(size: 15))
                 .foregroundStyle(Theme.muted)
                 .fixedSize(horizontal: false, vertical: true)
         }
     }
 
     private var fields: some View {
-        VStack(spacing: 12) {
-            fieldCard {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("地址")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.muted)
-                    TextField("192.168.1.8:3080", text: $address)
-                        .textContentType(.URL)
-                        .keyboardType(.URL)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                        .focused($focused, equals: .address)
-                        .submitLabel(.next)
-                        .onSubmit { focused = .token }
-                        .font(.body.monospaced())
-                }
+        VStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text("地址")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(Theme.muted)
+                    .textCase(.uppercase)
+                    .tracking(1.2)
+                TextField("192.168.1.8:3080", text: $address)
+                    .textContentType(.URL)
+                    .keyboardType(.URL)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .submitLabel(.next)
+                    .onSubmit { focused = .token }
+                    .focused($focused, equals: .address)
+                    .font(.system(size: 16, design: .monospaced))
+                    .foregroundStyle(.white)
             }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
 
-            fieldCard {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("Token")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Theme.muted)
-                    HStack(spacing: 8) {
-                        Group {
-                            if revealToken {
-                                TextField("启动时打印的 token", text: $token)
-                            } else {
-                                SecureField("启动时打印的 token", text: $token)
-                            }
-                        }
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
-                        .focused($focused, equals: .token)
-                        .submitLabel(.go)
-                        .onSubmit(connect)
-                        .font(.body.monospaced())
+            Divider().overlay(Theme.hairline)
 
-                        Button {
-                            revealToken.toggle()
-                        } label: {
-                            Image(systemName: revealToken ? "eye.slash" : "eye")
-                                .foregroundStyle(Theme.muted)
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Token")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(Theme.muted)
+                    .textCase(.uppercase)
+                    .tracking(1.2)
+
+                HStack(spacing: 8) {
+                    Group {
+                        if revealToken {
+                            TextField("启动时打印的 token", text: $token)
+                        } else {
+                            SecureField("启动时打印的 token", text: $token)
                         }
-                        .buttonStyle(.plain)
                     }
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+                    .submitLabel(.go)
+                    .onSubmit(connect)
+                    .focused($focused, equals: .token)
+                    .font(.system(size: 16, design: .monospaced))
+                    .foregroundStyle(.white)
+
+                    Button {
+                        revealToken.toggle()
+                    } label: {
+                        Image(systemName: revealToken ? "eye.slash" : "eye")
+                            .font(.system(size: 14))
+                            .foregroundStyle(Theme.muted)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+        }
+        .ncnsGlass(cornerRadius: 22, interactive: true)
 
+        .overlay(alignment: .bottomLeading) {
             if let error = store.lastError {
                 Label(error, systemImage: "exclamationmark.triangle.fill")
-                    .font(.footnote)
-                    .foregroundStyle(.orange)
-                    .fixedSize(horizontal: false, vertical: true)
+                    .font(.system(size: 12))
+                    .foregroundStyle(Color(hex: 0xFFB86B))
+                    .padding(.horizontal, 6)
+                    .offset(y: 26)
             }
         }
+        .padding(.bottom, store.lastError == nil ? 0 : 24)
     }
 
     private var actions: some View {
         VStack(spacing: 10) {
             Button(action: connect) {
                 Text("连接")
-                    .font(.headline)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
             }
-            .buttonStyle(.borderedProminent)
-            .buttonBorderShape(.roundedRectangle)
+            .buttonStyle(.ncnsProminent)
             .disabled(address.trimmingCharacters(in: .whitespaces).isEmpty)
 
             Button {
@@ -145,22 +198,20 @@ struct ConnectView: View {
                 scanning = true
             } label: {
                 Label("扫描二维码", systemImage: "qrcode.viewfinder")
-                    .font(.subheadline.weight(.semibold))
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 12)
             }
-            .buttonStyle(.bordered)
-            .buttonBorderShape(.roundedRectangle)
+            .buttonStyle(.ncnsGlass)
 
             Button {
                 address = "http://127.0.0.1:3080"
                 focused = .token
             } label: {
                 Text("填入本机 3080")
-                    .font(.footnote)
-                    .foregroundStyle(Theme.muted)
+                    .font(.system(size: 12))
+                    .foregroundStyle(Theme.dim)
             }
             .buttonStyle(.plain)
+            .padding(.top, 2)
         }
     }
 
@@ -169,8 +220,10 @@ struct ConnectView: View {
         if !store.hosts.isEmpty {
             VStack(alignment: .leading, spacing: 10) {
                 Text("最近")
-                    .font(.caption.weight(.semibold))
+                    .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(Theme.muted)
+                    .textCase(.uppercase)
+                    .tracking(1.2)
 
                 VStack(spacing: 0) {
                     ForEach(store.hosts) { host in
@@ -185,22 +238,22 @@ struct ConnectView: View {
                             }
                         } label: {
                             HStack(spacing: 12) {
-                                Circle()
-                                    .fill(Theme.accent.opacity(0.14))
-                                    .frame(width: 34, height: 34)
+                                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                    .fill(Theme.artwork(host.displayName.count))
+                                    .frame(width: 36, height: 36)
                                     .overlay(
                                         Image(systemName: "desktopcomputer")
-                                            .font(.system(size: 15, weight: .semibold))
-                                            .foregroundStyle(Theme.accent)
+                                            .font(.system(size: 14, weight: .semibold))
+                                            .foregroundStyle(.white.opacity(0.9))
                                     )
 
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(host.displayName)
-                                        .font(.subheadline.weight(.semibold))
-                                        .foregroundStyle(.primary)
+                                        .font(.system(size: 15, weight: .semibold))
+                                        .foregroundStyle(.white)
                                         .lineLimit(1)
                                     Text(host.originText)
-                                        .font(.caption.monospaced())
+                                        .font(.system(size: 11, design: .monospaced))
                                         .foregroundStyle(Theme.muted)
                                         .lineLimit(1)
                                 }
@@ -208,10 +261,11 @@ struct ConnectView: View {
                                 Spacer(minLength: 8)
 
                                 Image(systemName: "chevron.right")
-                                    .font(.caption.weight(.bold))
-                                    .foregroundStyle(.tertiary)
+                                    .font(.system(size: 11, weight: .bold))
+                                    .foregroundStyle(Theme.dim)
                             }
-                            .padding(.vertical, 10)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 11)
                             .contentShape(Rectangle())
                         }
                         .buttonStyle(.plain)
@@ -224,31 +278,20 @@ struct ConnectView: View {
                         }
 
                         if host.id != store.hosts.last?.id {
-                            Divider().padding(.leading, 46)
+                            Divider().overlay(Theme.hairline).padding(.leading, 62)
                         }
                     }
                 }
-                .padding(.horizontal, 14)
-                .background(Theme.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .ncnsGlass(cornerRadius: 20)
             }
         }
     }
 
     private var footer: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text("在电脑上运行 `dsh web`，把打印出来的地址填进来；地址里带 `?token=` 的话，token 会自动识别。局域网连接需要在配置里把 host 设成电脑的局域网地址，并放行防火墙。")
-                .font(.caption)
-                .foregroundStyle(Theme.muted)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-        .padding(.top, 6)
-    }
-
-    private func fieldCard<Content: View>(@ViewBuilder content: () -> Content) -> some View {
-        content()
-            .padding(.horizontal, 14)
-            .padding(.vertical, 12)
-            .background(Theme.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        Text("在电脑上运行 `dsh web --host <局域网地址>`，把打印出来的地址填进来；带 `?token=` 的地址会自动拆出 token。token 是一次性的，换过登录 cookie 之后就不再需要它。")
+            .font(.system(size: 12))
+            .foregroundStyle(Theme.dim)
+            .fixedSize(horizontal: false, vertical: true)
     }
 
     // MARK: - Actions
@@ -264,15 +307,10 @@ struct ConnectView: View {
             address = parsed.originText
             token = parsed.token
             if parsed.token.isEmpty {
-                token = ""
                 focused = .token
             } else {
                 connect()
             }
-        } else if trimmed.contains("token="),
-                  let components = URLComponents(string: trimmed.hasPrefix("http") ? trimmed : "http://" + trimmed),
-                  let value = components.queryItems?.first(where: { $0.name == "token" })?.value {
-            token = value
         }
     }
 }

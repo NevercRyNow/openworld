@@ -1,18 +1,21 @@
 import SwiftUI
 
+@MainActor
 struct RootView: View {
     @EnvironmentObject private var store: HostStore
+    @StateObject private var demo = DemoStore()
 
     var body: some View {
         Group {
-            if let host = store.current {
-                WebScreen(host: host)
-                    .id(host.id)
-            } else {
+            if store.current == nil {
                 ConnectView()
+            } else {
+                MainShell()
             }
         }
-        .animation(.easeInOut(duration: 0.22), value: store.current?.id)
+        .environmentObject(demo)
+        .preferredColorScheme(.dark)
+        .animation(.easeInOut(duration: 0.24), value: store.current?.id)
         .onOpenURL { url in
             guard let scheme = url.scheme, scheme == "ncnsdsh" || scheme == "dsh" else { return }
             let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems
@@ -26,6 +29,5 @@ struct RootView: View {
 }
 
 #Preview {
-    RootView()
-        .environmentObject(HostStore())
+    RootView().environmentObject(HostStore())
 }

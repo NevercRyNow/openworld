@@ -1,16 +1,19 @@
 # NcnsDSH
 
-一个原生 SwiftUI 外壳，装的是正在运行的 DeepSeek Harness Web 界面。
-扫码把手机连到那台跑 `dsh web` 的电脑，会话、工具调用、审批、文件都在原来的宿主里执行，
-手机只是一个原生入口——不重跑引擎，也不复制会话。
+DeepSeek Harness 的 iOS 原生客户端。视觉参照 tv 的暗色影院首页与 Apple Music 的
+artwork 驱动详情页，材质用 iOS 26 Liquid Glass；会话、工具卡、审批全部原生。
 
 ```
 ┌──────────── iPhone ────────────┐        ┌──────── 电脑 ────────┐
-│ SwiftUI：连接 / 最近 / 设置     │  HTTPS │ dsh web              │
-│ WKWebView：官方 Web UI         │◄──────►│ 会话 · 工具 · 审批    │
-│ Keychain：token                │   WS   │ 工作区                │
+│ SwiftUI：首页 / 会话 / 审批      │   WS   │ dsh web              │
+│ 演示数据（接网关前的占位）        │◄──────►│ 会话 · 工具 · 审批    │
+│ WKWebView：插件页 / 终端兜底     │        │ 工作区                │
 └────────────────────────────────┘        └──────────────────────┘
 ```
+
+**当前阶段**：视觉与交互已经按最终形态跑通（B + C），数据是本地的演示数据（`DemoStore`）。
+接 `dsh-plugin-mobile-gateway` 的 WebSocket 之后，只需把 `DemoStore.send/approve` 换成真实调用，
+视图层不动（A 的那一半）。
 
 ## 快速开始
 
@@ -30,12 +33,14 @@ dsh web --host 192.168.1.8
 ### 2. 手机：连接
 
 打开 NcnsDSH，粘贴地址（token 会自动从 `?token=` 里拆出来），或点「扫描二维码」，
-把上面那个 URL 做成二维码扫进来。连上后：
+把上面那个 URL 做成二维码扫进来。连上后进的是原生界面：
 
-- 顶部只留一条细进度条、前进/后退和菜单，其余都是官方的 Web UI；
-- 菜单里有刷新、在 Safari 打开、复制带 token 的地址、设置、断开；
-- 文件选择、下载、`alert/confirm/prompt` 都接到原生；
-- token 存钥匙串，最近宿主存 UserDefaults，最多 8 台。
+- 首页：hero + 「继续 / 工作区 / 最近完成」三条 shelf；
+- 会话：原生消息流、可折叠工具卡、底部玻璃输入条、审批 sheet；
+- 底部「运行中」胶囊：离开会话后仍能看到正在跑的那一个；
+- 插件页、终端、文件预览还留在「设置 → 网页版」里（WKWebView 兜底）。
+
+token 存钥匙串，最近宿主存 UserDefaults，最多 8 台。
 
 ### token 是「一次性的」
 
@@ -88,9 +93,17 @@ ios-dsh/
 └── docs/                    # 调研、OpenWorld 集成方案
 ```
 
+## 玻璃与系统版本
+
+`App/DesignSystem/Glass.swift` 把 Liquid Glass 收在一个地方：
+iOS 26 SDK 编出来、跑在 iOS 26 上是真玻璃（`.glassEffect(_:in:)`）；
+旧 SDK 或旧系统自动退化成 `.ultraThinMaterial`，用 `#if compiler(>=6.2)` + `#available` 隔开。
+玻璃只给 chrome（tab bar、toolbar、输入条、审批、运行中胶囊）和卡片按下态，内容区一律不透明。
+
 ## 已知限制
 
-- 必须有一台在运行的宿主；离线不可用。这是「原生壳」形态的代价，见 `docs/research.md` 的路线对比。
+- 数据还是演示数据；`DemoStore` 就是接网关时要替换的那一层。
+- 必须有一台在运行的宿主；离线不可用。这是客户端形态的代价，见 `docs/research.md` 的路线对比。
 - 官方 Web UI 是桌面优先的布局，iPhone 竖屏信息密度偏高；下一步在壳里加窄屏适配（折叠侧栏 / 单栏对话）。
 - 无签名 IPA 需要自己签名；没有 App Store / TestFlight 通道。
 - 后台不保活：切走后连接会断，回来重新连（Web UI 会自己重连）。
