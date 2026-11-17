@@ -1,4 +1,4 @@
-# DSH for iOS
+# NcnsDSH
 
 一个原生 SwiftUI 外壳，装的是正在运行的 DeepSeek Harness Web 界面。
 扫码把手机连到那台跑 `dsh web` 的电脑，会话、工具调用、审批、文件都在原来的宿主里执行，
@@ -29,7 +29,7 @@ dsh web --host 192.168.1.8
 
 ### 2. 手机：连接
 
-打开 DSH，粘贴地址（token 会自动从 `?token=` 里拆出来），或点「扫描二维码」，
+打开 NcnsDSH，粘贴地址（token 会自动从 `?token=` 里拆出来），或点「扫描二维码」，
 把上面那个 URL 做成二维码扫进来。连上后：
 
 - 顶部只留一条细进度条、前进/后退和菜单，其余都是官方的 Web UI；
@@ -52,19 +52,19 @@ cookie 丢了（清了数据、换了宿主进程）就点错误页上的「重�
 cd ios-dsh
 brew install xcodegen
 xcodegen generate
-open DSHPocket.xcodeproj     # 选自己的 Team 即可真机调试
+open NcnsDSH.xcodeproj     # 选自己的 Team 即可真机调试
 ```
 
 ### 本机一键出包
 
 ```sh
-./build-ipa.sh      # 产出 DSH-unsigned.ipa + SHA256.txt
+./build-ipa.sh      # 产出 NcnsDSH-unsigned.ipa + SHA256.txt
 ```
 
 ### 无签名 IPA（CI）
 
 本机没有 Xcode 也能出包：`/.github/workflows/dsh-ios.yml` 在 `macos-15` 上跑，
-`CODE_SIGNING_ALLOWED=NO` 构建后把 `.app` 打成 `Payload/` 再 zip 成 `DSH-unsigned.ipa`，
+`CODE_SIGNING_ALLOWED=NO` 构建后把 `.app` 打成 `Payload/` 再 zip 成 `NcnsDSH-unsigned.ipa`，
 连同 `SHA256.txt` 一起作为 artifact 上传。
 
 侧载（AltStore / Sideloadly / TrollStore）后即可安装；免费 Apple ID 签名 7 天有效。

@@ -14,7 +14,7 @@ struct RootView: View {
         }
         .animation(.easeInOut(duration: 0.22), value: store.current?.id)
         .onOpenURL { url in
-            guard url.scheme == "dsh" else { return }
+            guard let scheme = url.scheme, scheme == "ncnsdsh" || scheme == "dsh" else { return }
             let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems
             let target = items?.first(where: { $0.name == "url" })?.value ?? ""
             let token = items?.first(where: { $0.name == "token" })?.value ?? ""

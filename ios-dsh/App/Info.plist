@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>zh_CN</string>
 	<key>CFBundleDisplayName</key>
-	<string>DSH</string>
+	<string>NcnsDSH</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -55,19 +55,19 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>扫描 DSH 连接二维码</string>
+	<string>扫描 NcnsDSH 连接二维码</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>连接同一局域网内运行 DSH 的电脑</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>把照片作为附件发给 DSH</string>
+	<string>把照片作为附件发给 NcnsDSH</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>com.nevercrynow.dsh</string>
+			<string>com.nevercrynow.ncnsdsh</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>dsh</string>
+				<string>ncnsdsh</string>
 			</array>
 		</dict>
 	</array>

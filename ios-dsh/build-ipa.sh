@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Builds an unsigned IPA on a Mac with Xcode + XcodeGen.
 #   ./build-ipa.sh
-# Output: DSH-unsigned.ipa next to this script.
+# Output: NcnsDSH-unsigned.ipa next to this script.
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -13,8 +13,8 @@ fi
 xcodegen generate
 
 xcodebuild \
-  -project DSHPocket.xcodeproj \
-  -scheme DSHPocket \
+  -project NcnsDSH.xcodeproj \
+  -scheme NcnsDSH \
   -sdk iphoneos \
   -configuration Release \
   -derivedDataPath build \
@@ -23,9 +23,9 @@ xcodebuild \
   CODE_SIGN_IDENTITY="" \
   | tee build.log
 
-rm -rf Payload DSH-unsigned.ipa
+rm -rf Payload NcnsDSH-unsigned.ipa
 mkdir -p Payload
-cp -R build/Build/Products/Release-iphoneos/DSH.app Payload/
-zip -qry DSH-unsigned.ipa Payload
-shasum -a 256 DSH-unsigned.ipa | tee SHA256.txt
-ls -lh DSH-unsigned.ipa
+cp -R build/Build/Products/Release-iphoneos/NcnsDSH.app Payload/
+zip -qry NcnsDSH-unsigned.ipa Payload
+shasum -a 256 NcnsDSH-unsigned.ipa | tee SHA256.txt
+ls -lh NcnsDSH-unsigned.ipa

@@ -23,7 +23,7 @@ DSH 的 Web 端本来就带 `manifest.webmanifest`、`apple-touch-icon` 和
 ```sh
 cd ios-dsh
 brew install xcodegen     # 只需一次
-./build-ipa.sh            # 产出 DSH-unsigned.ipa + SHA256.txt
+./build-ipa.sh            # 产出 NcnsDSH-unsigned.ipa + SHA256.txt
 ```
 
 ### B2. Codemagic（没有 Mac，但要有 Codemagic 账号）

@@ -2,7 +2,7 @@ import Foundation
 import Security
 
 enum Keychain {
-    private static let service = "com.nevercrynow.dsh"
+    private static let service = "com.nevercrynow.ncnsdsh"
 
     static func set(_ value: String, for account: String) {
         let data = Data(value.utf8)

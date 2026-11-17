@@ -33,7 +33,7 @@ workflows:
       - ios/OpenWorld-unsigned.ipa
 
   dsh-ios-unsigned-ipa:
-    name: DSH iOS unsigned IPA
+    name: NcnsDSH unsigned IPA
     instance_type: mac_mini_m2
     max_build_duration: 30
     environment:
@@ -50,8 +50,8 @@ workflows:
           set -e
           cd ios-dsh
           xcodebuild \
-            -project DSHPocket.xcodeproj \
-            -scheme DSHPocket \
+            -project NcnsDSH.xcodeproj \
+            -scheme NcnsDSH \
             -sdk iphoneos \
             -configuration Release \
             -derivedDataPath build \
@@ -59,8 +59,8 @@ workflows:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY=""
           mkdir -p Payload
-          cp -R build/Build/Products/Release-iphoneos/DSH.app Payload/
-          zip -qry DSH-unsigned.ipa Payload
-          shasum -a 256 DSH-unsigned.ipa
+          cp -R build/Build/Products/Release-iphoneos/NcnsDSH.app Payload/
+          zip -qry NcnsDSH-unsigned.ipa Payload
+          shasum -a 256 NcnsDSH-unsigned.ipa
     artifacts:
-      - ios-dsh/DSH-unsigned.ipa
+      - ios-dsh/NcnsDSH-unsigned.ipa

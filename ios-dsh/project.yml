@@ -1,4 +1,4 @@
-name: DSHPocket
+name: NcnsDSH
 options:
   bundleIdPrefix: com.nevercrynow
   deploymentTarget:
@@ -15,7 +15,7 @@ settings:
     SWIFT_EMIT_LOC_STRINGS: YES
 
 targets:
-  DSHPocket:
+  NcnsDSH:
     type: application
     platform: iOS
     scheme: {}
@@ -25,10 +25,10 @@ targets:
           - "Info.plist"
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.nevercrynow.dsh
+        PRODUCT_BUNDLE_IDENTIFIER: com.nevercrynow.ncnsdsh
         INFOPLIST_FILE: App/Info.plist
         GENERATE_INFOPLIST_FILE: NO
-        PRODUCT_NAME: DSH
+        PRODUCT_NAME: NcnsDSH
         MARKETING_VERSION: "0.1.0"
         CURRENT_PROJECT_VERSION: "1"
         TARGETED_DEVICE_FAMILY: "1,2"

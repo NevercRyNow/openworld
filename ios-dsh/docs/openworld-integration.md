@@ -1,6 +1,6 @@
 # 把 DSH 做成 OpenWorld 里的一个功能
 
-现在 `ios-dsh/` 是一个**独立 App**（`com.nevercrynow.dsh`）。这一步先证明它能用；
+现在 `ios-dsh/` 是一个**独立 App**（`com.nevercrynow.ncnsdsh`）。这一步先证明它能用；
 之后按下面的方式并进 OpenWorld，不用重写界面。
 
 ## 现状
@@ -11,21 +11,21 @@
 
 ## 合并方式（推荐）
 
-把 `ios-dsh/App` 里除 `DSHApp.swift` 之外的内容提成一个本地 Swift Package `DSHKit`：
+把 `ios-dsh/App` 里除 `DSHApp.swift` 之外的内容提成一个本地 Swift Package `NcnsKit`：
 
 ```
-Packages/DSHKit/
+Packages/NcnsKit/
   Package.swift
-  Sources/DSHKit/
+  Sources/NcnsKit/
     Host.swift  HostStore.swift  Keychain.swift
     ConnectView.swift  ScannerView.swift  WebScreen.swift  WebView.swift  SettingsView.swift
     Theme.swift
 ```
 
-OpenWorld 的 App target 增加依赖 `DSHKit`，然后在入口放一个 tab / 页面：
+OpenWorld 的 App target 增加依赖 `NcnsKit`，然后在入口放一个 tab / 页面：
 
 ```swift
-import DSHKit
+import NcnsKit
 
 struct OpenWorldRoot: View {
     @StateObject private var hosts = HostStore()
@@ -33,7 +33,7 @@ struct OpenWorldRoot: View {
     var body: some View {
         TabView {
             // …原有的模拟器 / 游戏页
-            DSHFeatureView()          // DSHKit 提供，内部就是 ConnectView ↔ WebScreen
+            NcnsFeatureView()          // NcnsKit 提供，内部就是 ConnectView ↔ WebScreen
                 .environmentObject(hosts)
                 .tabItem { Label("DSH", systemImage: "terminal") }
         }
@@ -41,7 +41,7 @@ struct OpenWorldRoot: View {
 }
 ```
 
-`DSHFeatureView` 只需要暴露三件事：宿主列表、连接入口、`store.disconnect()`。
+`NcnsFeatureView` 只需要暴露三件事：宿主列表、连接入口、`store.disconnect()`。
 其余（Keychain、扫码、下载、文件选择）都在包里，不依赖 OpenWorld 的任何代码。
 
 ### 需要一起改的几处
