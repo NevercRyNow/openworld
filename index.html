@@ -423,8 +423,14 @@
         <div class="section-head-side reveal" data-delay="1"><p>进度、速度、来源与 SHA-256，一条任务看清全部状态。不经过中间服务器，下载完成即校验。</p><span class="mono">PROGRESS / SPEED / SOURCE / SHA-256</span></div>
       </div>
       <div class="download-manager reveal" data-delay="1">
-        <div class="dm-head"><div><span class="mono">DOWNLOAD MANAGER</span><strong>4 个任务 · 1 个已完成</strong></div><div class="dm-storage"><span class="mono">STORAGE</span><div class="dm-storage-bar"><i style="--p:42%"></i></div><em>4.2 GB / 64 GB</em></div></div>
+        <div class="dm-head"><div><span class="mono">DOWNLOAD MANAGER</span><strong>5 个任务 · 2 个已完成</strong></div><div class="dm-storage"><span class="mono">STORAGE</span><div class="dm-storage-bar"><i style="--p:42%"></i></div><em>4.2 GB / 64 GB</em></div></div>
         <div class="dl-list" id="dlList">
+          <a class="dl-row done" data-dl="ncnsdsh" href="downloads/NcnsDSH-0.3.0.ipa" download>
+            <span class="dl-icon blue"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg></span>
+            <div class="dl-info"><strong>NcnsDSH 0.3.0</strong><em>iPhone &amp; iPad · 1.6 MB · SHA-256 81b0a610…</em></div>
+            <div class="dl-progress"><div class="dl-bar"><i style="width:100%"></i></div><div class="dl-meta"><span class="dl-pct">100%</span><span class="dl-speed">真实下载 · 无签名 IPA</span></div></div>
+            <span class="dl-action verified"><span>下载</span></span>
+          </a>
           <div class="dl-row" data-dl="app">
             <span class="dl-icon blue"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-download"/></svg></span>
             <div class="dl-info"><strong>iOSHub 3.2.1</strong><em>iPhone &amp; iPad · 3.9 MB</em></div>
@@ -455,7 +461,7 @@
           <div class="dl-setting"><div><span class="mono">CONCURRENCY</span><strong>并发任务</strong></div><div class="dl-seg" role="group" aria-label="并发任务数"><button type="button">1</button><button type="button" class="active">2</button><button type="button">3</button></div></div>
           <div class="dl-setting"><div><span class="mono">INTEGRITY</span><strong>下载后自动校验 SHA-256</strong></div><button type="button" class="mini-switch" role="switch" aria-checked="true" data-dl-setting="hash" aria-label="自动校验 SHA-256"><span></span></button></div>
         </div>
-        <div class="dm-foot"><span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg> SHA-256 · 本地校验 · 不经过中间服务器</span><span class="mono">交互演示 / 不产生真实下载</span></div>
+        <div class="dm-foot"><span><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-check"/></svg> SHA-256 · 本地校验 · 不经过中间服务器</span><span class="mono">第一条为真实下载 · 其余为交互演示</span></div>
       </div>
     </div>
   </section>
